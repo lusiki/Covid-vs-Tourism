@@ -232,7 +232,7 @@ CDFld  %>%
 #diff
 CDFld  %>% 
   group_by(variable) %>%
-  summarise(
+  summarise((is.na(df2))
     berra.pvalue =  jarque.bera.test(diff)$p.value,
     berra =  jarque.bera.test(diff)$p.value<0.05,
     box.pvalue = Box.test(diff, lag=20, type="Ljung-Box")$p.value,
@@ -249,8 +249,8 @@ CDFld  %>%
 
 
 df2<-COVIDtuDFf[complete.cases(COVIDtuDFf),]
-sum(is.na(df2))
-reg <- lm(crobexTur ~ lockdown + caseEU + caseCRO + sp500 + crobex + dax + oil + gold, data = diff)
+sum
+reg <- lm(crobexTur ~ lockdown + caseEU + caseCRO + sp500 + crobex + dax + oil + gold, data = diff[-c(178,195,235,273,278,284,285,286,293,297,298,305,306,328,329,330,335,341,423,428,436,450,451,457,459,460,471,492),])
 
 options(scipen=999)
 summary(reg)
