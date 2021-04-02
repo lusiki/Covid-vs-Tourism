@@ -145,6 +145,9 @@ log <- CDFld %>% select(Index, variable,log) %>% spread(variable,log)
 all <- left_join(raw, diff, by="Index") %>% left_join(.,log, by = "Index")
 
 
+diff <- diff %>% select(-lockdwn) %>% mutate(., lockdown = raw$lockdwn)
+
+
 # DESKRIPTIVA----
 
 
@@ -247,12 +250,15 @@ CDFld  %>%
 
 df2<-COVIDtuDFf[complete.cases(COVIDtuDFf),]
 sum(is.na(df2))
-reg <- lm(crobexTur ~ lockdwn + caseEU + caseCRO + sp500 + crobex + dax + oil + gold, data = df2)
+reg <- lm(crobexTur ~ lockdown + caseEU + caseCRO + sp500 + crobex + dax + oil + gold, data = diff)
 
-
+options(scipen=999)
 summary(reg)
 
-
+plot(reg, which = 1)
+plot(reg, which = 2)
+plot(reg, which = 3)
+plot(reg, which = 4)
 
 
 
