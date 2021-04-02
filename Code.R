@@ -132,14 +132,18 @@ dfMelted <- melt(COVIDturDF, id.vars="Index")
 
   
 COVIDturDF %>% 
-  select(Index:gold) %>%
+# select(Index:gold) %>%
   melt(., id.vars = "Index") %>%
   group_by(variable) %>% 
   mutate(log = log(value),
          diff = c(0,diff(value))) -> CDFld
 
+raw <- CDFld %>% select(Index, variable, value) %>% spread(variable,value)
+diff <- CDFld %>% select(Index, variable,diff) %>% spread(variable,diff)
+log <- CDFld %>% select(Index, variable,log) %>% spread(variable,log)
 
-CDFld %>% spread(variable,diff)
+all <- left_join(raw, diff, by="Index") %>% left_join(.,log, by = "Index")
+
 
 # DESKRIPTIVA----
 
