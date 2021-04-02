@@ -130,12 +130,33 @@ COVIDturDF <- fortify(COVIDtur)
 dfMelted <- melt(COVIDturDF, id.vars="Index")
 
 
+  
+COVIDturDF %>% 
+  select(Index:gold) %>%
+  melt(., id.vars = "Index") %>%
+  group_by(variable) %>% 
+  mutate(log = log(value),
+         diff = c(0,diff(value))) -> CDFld
+
+
+CDFld %>% spread(variable,diff)
+
 # DESKRIPTIVA----
 
 
 ggplot(dfMelted, aes(Index, value)) +
   geom_line() +
   facet_wrap( ~ variable, scales = "free")
+
+
+ggplot(CDFld,aes(Index,log)) +
+  geom_line() + 
+  facet_wrap(~variable, scales = "free")
+
+
+ggplot(CDFld,aes(Index,diff)) +
+  geom_line() + 
+  facet_wrap(~variable, scales = "free")
 
 
 
@@ -149,7 +170,27 @@ dfMelted %>%
             Kurt = moments::skewness(value, na.rm = T))
 
 
+CDFld %>%
+  group_by(variable) %>%
+  summarise(Prosjek = mean(log, na.rm = T),
+            StDev = sd(log, na.rm = T),
+            Min = min(log, na.rm = T),
+            Max = max(log, na.rm = T),
+            Skew = moments::kurtosis(log, na.rm = T),
+            Kurt = moments::skewness(log, na.rm = T))
 
+
+CDFld %>%
+  group_by(variable) %>%
+  summarise(Prosjek = mean(diff, na.rm = T),
+            StDev = sd(diff, na.rm = T),
+            Min = min(diff, na.rm = T),
+            Max = max(diff, na.rm = T),
+            Skew = moments::kurtosis(diff, na.rm = T),
+            Kurt = moments::skewness(diff, na.rm = T))
+
+
+#raw
 dfMelted %>% 
   group_by(variable) %>%
   summarise(
@@ -165,19 +206,7 @@ dfMelted %>%
 
 
 
-
-COVIDturDF %>% 
-  select(Index:gold) %>%
-  melt(., id.vars = "Index") %>%
-  group_by(variable) %>% 
-  mutate(log = log(value),
-         diff = c(0,diff(value))) -> CDFld
-
-
-ggplot(CDFld,aes(Index,log)) +
-  geom_line() + 
-  facet_wrap(~variable, scales = "free")
-
+#log
 CDFld  %>% 
   group_by(variable) %>%
   summarise(
@@ -192,10 +221,8 @@ CDFld  %>%
   )
 
 
-ggplot(CDFld,aes(Index,diff)) +
-  geom_line() + 
-  facet_wrap(~variable, scales = "free")
 
+#diff
 CDFld  %>% 
   group_by(variable) %>%
   summarise(
