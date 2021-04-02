@@ -1,0 +1,233 @@
+
+##############################
+##UTJECAJ COVID19 NA TURIZAM##
+##############################
+
+# PAKETI----
+library(tidy)
+library(quantmod)
+library(Quandl)
+library(tidyverse)
+library(tidyquant)
+library(timetk)
+library(forecast)
+library(highcharter)
+library(coronavirus)
+library(tidycovid19)
+library(zoo)
+library(kableExtra)
+library(rvest)
+library(tidyr)
+library(reshape2)
+library(tsoutliers)
+library(tseries)
+
+
+# PODACI----
+
+
+Quandl.api_key("jvwknzKzNdiuqGPCyXcT")
+CrobexTur <- Quandl("ZAGREBSE/CROBEXTURIST",type = "xts",collapse = "daily",start_date = "2019-01-01", end_date = Sys.Date())
+Crobex <- Quandl("ZAGREBSE/CROBEX", type = "xts",collapse = "daily",start_date = "2019-01-01", end_date = Sys.Date())
+oil <- Quandl("OPEC/ORB",type = "xts",collapse = "daily",start_date = "2019-01-01", end_date = Sys.Date())
+gold <- Quandl("LBMA/GOLD", type = "xts", collapse = "daily", start_date = "2019-01-01",end_date = Sys.Date())
+
+
+getSymbols(c("^VIX","^GSPC", "^GDAXI", "^FTSE"),
+           from = as.Date("2019-01-01"),
+           to = as.Date(Sys.Date()))
+
+# uvezi COVID-19
+
+euCountries <- read_html("https://en.wikipedia.org/wiki/Member_state_of_the_European_Union") %>%
+  html_nodes("table.wikitable:nth-child(11)") %>% 
+  html_table(fill= T) %>% 
+  as.data.frame() %>%
+  select(Name,  iso3c = ISO.3166.1.alpha.3 ) %>%
+  slice(-28)
+
+df <- download_merged_data(cached = TRUE, silent = TRUE)
+
+sifranik <- tidycovid19_variable_definitions %>%
+  select(var_name, var_def)
+#kable(df) %>% kableExtra::kable_styling()
+
+
+euCovid <- df %>%
+  inner_join(., euCountries, by = "iso3c") %>% 
+  group_by(date) %>% 
+  summarise(confirmed = sum(confirmed, na.rm = T)) %>%
+  #  filter(country == "Croatia") %>%
+  mutate(
+    new_cases = confirmed - lag(confirmed),
+    ave_new_cases = rollmean(new_cases, 7, na.pad=TRUE, align="right")
+  ) %>%
+  filter(!is.na(new_cases), !is.na(ave_new_cases)) %>%
+  select(date, EUcase = new_cases)
+
+
+euCovidXTS <- xts::xts(euCovid[,-1],
+                       order.by = as.Date(euCovid$date),
+                       unique=TRUE)
+
+CROCovid <- df %>%
+  filter(country == "Croatia") %>%
+  mutate(
+    new_cases = confirmed - lag(confirmed),
+    ave_new_cases = rollmean(new_cases, 7, na.pad=TRUE, align="right")
+  ) %>%
+  filter(!is.na(new_cases), !is.na(ave_new_cases)) %>%
+  select(date, CROcase = new_cases) 
+
+
+CROCovidXTS <- xts::xts(CROCovid[,-1],
+                        order.by = as.Date(CROCovid$date),
+                        unique=TRUE)
+
+
+# UREDI ----
+
+COVIDtur <- merge(VIX$VIX.Close,
+                  GSPC$GSPC.Close,
+                  GDAXI$GDAXI.Close,
+                  FTSE$FTSE.Close,
+                  oil,
+                  gold$`EURO (AM`, 
+                  CROCovidXTS,
+                  euCovidXTS)
+
+
+COVIDtur <- merge(CrobexTur,COVIDtur, join = "left")
+COVIDtur <- merge(Crobex, COVIDtur, join = "left")
+
+COVIDtur <- COVIDtur[index(COVIDtur) > "2019-01-01"]
+
+
+
+colnames(COVIDtur)[1] <- "crobex"
+colnames(COVIDtur)[2] <- "crobexTur"
+colnames(COVIDtur)[3] <- "vix"
+colnames(COVIDtur)[4] <- "sp500"
+colnames(COVIDtur)[5] <- "dax"
+colnames(COVIDtur)[6] <- "ftse"
+colnames(COVIDtur)[7] <- "oil"
+colnames(COVIDtur)[8] <- "gold"
+colnames(COVIDtur)[9] <- "caseCRO"
+colnames(COVIDtur)[10] <- "caseEU"
+
+COVIDtur %>% 
+  as.data.frame() %>% 
+  mutate_at(c("caseCRO","caseEU"),~replace(.,is.na(.),0)) %>%
+  drop_na() %>% 
+  as.xts() -> COVIDtur
+
+
+COVIDtur$lockdwn <- 0
+COVIDtur$lockdwn[index(COVIDtur) >= "2020-01-23"] <- 1
+
+
+COVIDturDF <- fortify(COVIDtur)
+dfMelted <- melt(COVIDturDF, id.vars="Index")
+
+
+# DESKRIPTIVA----
+
+
+ggplot(dfMelted, aes(Index, value)) +
+  geom_line() +
+  facet_wrap( ~ variable, scales = "free")
+
+
+
+dfMelted %>%
+  group_by(variable) %>%
+  summarise(Prosjek = mean(value, na.rm = T),
+            StDev = sd(value, na.rm = T),
+            Min = min(value, na.rm = T),
+            Max = max(value, na.rm = T),
+            Skew = moments::kurtosis(value, na.rm = T),
+            Kurt = moments::skewness(value, na.rm = T))
+
+
+
+dfMelted %>% 
+  group_by(variable) %>%
+  summarise(
+    berra.pvalue =  jarque.bera.test(value)$p.value,
+    berra =  jarque.bera.test(value)$p.value<0.05,
+    box.pvalue = Box.test(value, lag=20, type="Ljung-Box")$p.value,
+    box = Box.test(value, lag=20, type="Ljung-Box")$p.value<0.05,
+    adf.pvalue = adf.test(value, alternative = "stationary")$p.value,  
+    adf = adf.test(value, alternative = "stationary")$p.value<0.05,
+    kpss.pvalue=kpss.test(value)$p.value,
+    kpss=kpss.test(value)$p.value>0.05
+  )
+
+
+
+
+COVIDturDF %>% 
+  select(Index:gold) %>%
+  melt(., id.vars = "Index") %>%
+  group_by(variable) %>% 
+  mutate(log = log(value),
+         diff = c(0,diff(value))) -> CDFld
+
+
+ggplot(CDFld,aes(Index,log)) +
+  geom_line() + 
+  facet_wrap(~variable, scales = "free")
+
+CDFld  %>% 
+  group_by(variable) %>%
+  summarise(
+    berra.pvalue =  jarque.bera.test(log)$p.value,
+    berra =  jarque.bera.test(log)$p.value<0.05,
+    box.pvalue = Box.test(log, lag=20, type="Ljung-Box")$p.value,
+    box = Box.test(log, lag=20, type="Ljung-Box")$p.value<0.05,
+    adf.pvalue = adf.test(log, alternative = "stationary")$p.value,  
+    adf = adf.test(log, alternative = "stationary")$p.value<0.05,
+    kpss.pvalue=kpss.test(log)$p.value,
+    kpss=kpss.test(log)$p.value>0.05
+  )
+
+
+ggplot(CDFld,aes(Index,diff)) +
+  geom_line() + 
+  facet_wrap(~variable, scales = "free")
+
+CDFld  %>% 
+  group_by(variable) %>%
+  summarise(
+    berra.pvalue =  jarque.bera.test(diff)$p.value,
+    berra =  jarque.bera.test(diff)$p.value<0.05,
+    box.pvalue = Box.test(diff, lag=20, type="Ljung-Box")$p.value,
+    box = Box.test(diff, lag=20, type="Ljung-Box")$p.value<0.05,
+    adf.pvalue = adf.test(diff, alternative = "stationary")$p.value,  
+    adf = adf.test(diff, alternative = "stationary")$p.value<0.05,
+    kpss.pvalue=kpss.test(diff)$p.value,
+    kpss=kpss.test(diff)$p.value>0.05
+  )
+
+
+# PROCJENA----
+
+
+
+df2<-COVIDtuDFf[complete.cases(COVIDtuDFf),]
+sum(is.na(df2))
+reg <- lm(crobexTur ~ lockdwn + caseEU + caseCRO + sp500 + crobex + dax + oil + gold, data = df2)
+
+
+summary(reg)
+
+
+
+
+
+
+
+
+
+
+
