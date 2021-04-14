@@ -2,45 +2,44 @@ library(estudy2)
 library(plotly)
 library(TSstudio)
 library(jsonlite)
-
+library(plyr)
 
 
 r <- GET("https://zse.hr/json/securityHistory/HRARNTRA0004/2019-01-01/2021-04-13/hr?trading_model_id=ALL")
 response <- content(r, as = "text", encoding = "UTF-8")
 ARENA <- fromJSON(response, flatten = TRUE) %>% 
   data.frame() %>%
-  select(Datum = rows.date, ARNT = rows.last_price ) %>%
-  mutate( Datum = as.Date(Datum,"%d.%m.%y"),
+  select(Date = rows.date, ARNT = rows.last_price ) %>%
+  mutate( Date = gsub("[.]$","", Date)) %>%
+  mutate( Date = as.Date(Date,"%d.%m.%Y"),
           ARNT = as.numeric(gsub("(.*),.*", "\\1", ARNT)))
+
  
 
 r <- GET("https://zse.hr/json/securityHistory/HRMAISRA0007/2019-01-01/2021-04-13/hr?trading_model_id=ALL")
 response <- content(r, as = "text", encoding = "UTF-8")
 MAISTRA <- fromJSON(response, flatten = TRUE) %>% 
   data.frame() %>%
-  select(Datum = rows.date, ARNT = rows.last_price ) %>%
-  mutate( Datum = as.Date(Datum,"%d.%m.%y"),
-          ARNT = as.numeric(gsub("(.*),.*", "\\1", ARNT)))
+  select(Date = rows.date, MAIS = rows.last_price ) %>%
+  mutate( Date = gsub("[.]$","", Date)) %>%
+  mutate( Date = as.Date(Date,"%d.%m.%Y"),
+          MAIS = as.numeric(gsub("(.*),.*", "\\1", MAIS)))
 
 
 r <- GET("https://zse.hr/json/securityHistory/HRRIVPRA0000/2019-10-23/2021-04-13/hr?trading_model_id=ALL")
 response <- content(r, as = "text", encoding = "UTF-8")
 VALAMAR <- fromJSON(response, flatten = TRUE) %>% 
   data.frame() %>%
-  select(Datum = rows.date, ARNT = rows.last_price ) %>%
-  mutate( Datum = as.Date(Datum,"%d.%m.%y"),
-          ARNT = as.numeric(gsub("(.*),.*", "\\1", ARNT)))
+  select(Date = rows.date, RIVP = rows.last_price ) %>%
+  mutate( Date = gsub("[.]$","", Date)) %>%
+  mutate( Date = as.Date(Date,"%d.%m.%Y"),
+          RIVP = as.numeric(gsub("(.*),.*", "\\1", RIVP)))
 
 
-
-
-
-
-
-
+TOURISMdta <-  join_all(list(ARENA,MAISTRA,VALAMAR), by='Date', type='left') %>% drop_na()
+  
 
 Quandl.api_key("jvwknzKzNdiuqGPCyXcT")
-CrobexTur <- Quandl("ZAGREBSE/CROBEXTURIST",type = "zoo",collapse = "daily",start_date = "2019-01-01", end_date = Sys.Date())
 Crobex <- Quandl("ZAGREBSE/CROBEX", type = "zoo",collapse = "daily",start_date = "2019-01-01", end_date = Sys.Date())
 
 CrobexKonst <- Quandl("ZAGREBSE/CROBEXKONSTRUKT",type = "zoo",collapse = "daily",start_date = "2019-01-01", end_date = Sys.Date())
