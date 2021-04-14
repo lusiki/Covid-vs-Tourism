@@ -3,6 +3,7 @@ library(plotly)
 library(TSstudio)
 library(jsonlite)
 library(plyr)
+library(zoo)
 
 
 r <- GET("https://zse.hr/json/securityHistory/HRARNTRA0004/2019-01-01/2021-04-13/hr?trading_model_id=ALL")
@@ -26,7 +27,7 @@ MAISTRA <- fromJSON(response, flatten = TRUE) %>%
           MAIS = as.numeric(gsub("(.*),.*", "\\1", MAIS)))
 
 
-r <- GET("https://zse.hr/json/securityHistory/HRRIVPRA0000/2019-10-23/2021-04-13/hr?trading_model_id=ALL")
+r <- GET("https://zse.hr/json/securityHistory/HRRIVPRA0000/2019-01-01/2021-04-13/hr?trading_model_id=ALL")
 response <- content(r, as = "text", encoding = "UTF-8")
 VALAMAR <- fromJSON(response, flatten = TRUE) %>% 
   data.frame() %>%
@@ -37,36 +38,14 @@ VALAMAR <- fromJSON(response, flatten = TRUE) %>%
 
 
 TOURISMdta <-  join_all(list(ARENA,MAISTRA,VALAMAR), by='Date', type='left') %>% drop_na()
-  
+TOURISMdta <- zoo(TOURISMdta[,-1], order.by = TOURISMdta$Date)
+
+
+
+
 
 Quandl.api_key("jvwknzKzNdiuqGPCyXcT")
-Crobex <- Quandl("ZAGREBSE/CROBEX", type = "zoo",collapse = "daily",start_date = "2019-01-01", end_date = Sys.Date())
-
-CrobexKonst <- Quandl("ZAGREBSE/CROBEXKONSTRUKT",type = "zoo",collapse = "daily",start_date = "2019-01-01", end_date = Sys.Date())
-Crobex <- Quandl("ZAGREBSE/ARNTRA", type = "zoo",collapse = "daily",start_date = "2019-01-01", end_date = Sys.Date())
-
-
-proba <- merge(CrobexTur, CrobexKonst, all = FALSE)
-
-oil <- Quandl("OPEC/ORB",type = "xts",collapse = "daily",start_date = "2019-01-01", end_date = Sys.Date())
-gold <- Quandl("LBMA/GOLD", type = "xts", collapse = "daily", start_date = "2019-01-01",end_date = Sys.Date())
-
-
-
-tickers <- c("ALV.DE", "CS.PA", "G.MI", "HNR1.HA", "HSX.L", "MUV2.DE", "RSA.L",
-             "TOP.CO")
-prices <- get_prices_from_tickers(tickers, 
-                                  start = as.Date("2000-01-01"),
-                                  end = as.Date("2002-01-01"),
-                                  quote = "Close",
-                                  retclass = "zoo")
-
-
-prices_indx <- get_prices_from_tickers("^N100",
-                                       start = as.Date("2000-01-01"),
-                                       end = as.Date("2002-01-01"),
-                                       quote = "Close",
-                                       retclass = "zoo")
+Crobex <- Quandl("ZAGREBSE/CROBEX", type = "zoo",collapse = "daily",start_date = "2019-01-02", end_date = Sys.Date())
 
 
 
