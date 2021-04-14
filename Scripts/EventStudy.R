@@ -37,6 +37,10 @@ VALAMAR <- fromJSON(response, flatten = TRUE) %>%
           RIVP = as.numeric(gsub("(.*),.*", "\\1", RIVP)))
 
 
+th <-
+
+
+
 TOURISMdta <-  join_all(list(ARENA,MAISTRA,VALAMAR), by='Date', type='left') %>% drop_na()
 TOURISMdta <- zoo(TOURISMdta[,-1], order.by = TOURISMdta$Date)
 
