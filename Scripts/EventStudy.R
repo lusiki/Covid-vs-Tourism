@@ -4,7 +4,13 @@ library(TSstudio)
 library(jsonlite)
 library(plyr)
 library(zoo)
-
+library(httr)
+library(plotly)
+library(TSstudio)
+library(jsonlite)
+library(dplyr)
+library(tidyr)
+library(Quandl)
 
 r <- GET("https://zse.hr/json/securityHistory/HRARNTRA0004/2019-01-01/2021-04-13/hr?trading_model_id=ALL")
 response <- content(r, as = "text", encoding = "UTF-8")
@@ -39,12 +45,11 @@ VALAMAR <- fromJSON(response, flatten = TRUE) %>%
 
 th <-
 
+TOURISMdta <- left_join(ARENA, MAISTRA,VALAMAR, by=c("Date")) %>% 
+  inner_join(.,VALAMAR, by=c("Date")) %>%
+  distinct(Date, .keep_all=TRUE) 
 
-
-TOURISMdta <-  join_all(list(ARENA,MAISTRA,VALAMAR), by='Date', type='left') %>% drop_na()
 TOURISMdta <- zoo(TOURISMdta[,-1], order.by = TOURISMdta$Date)
-
-
 
 
 
@@ -53,7 +58,7 @@ Crobex <- Quandl("ZAGREBSE/CROBEX", type = "zoo",collapse = "daily",start_date =
 
 
 
-rates <- get_rates_from_prices(proba,
+rates <- get_rates_from_prices(TOURISMdta,
                                quote = "Close",
                                multi_day = TRUE,
                                compounding = "continuous")
@@ -82,29 +87,6 @@ parametric_tests(list_of_returns = securities_returns,
 
 
 
-
-library(plotly)
-library(TSstudio)
-library(jsonlite)
-
-today <- Sys.Date()
-tm <- seq(0, 600, by = 10)
-x <- today - tm
-y <- rnorm(length(x))
-
-ts_plot(CrobexTur)
-ts_plot(Crobex)
-
-
-library(httr)
-r <- GET("https://zse.hr/json/securityHistory/HRARNTRA0004/2019-10-23/2021-04-13/hr?trading_model_id=ALL")
-raw <- str(content(r, "parsed"))
-bin <- str(content(r,"parsed"))
-
-response <- content(r, as = "text", encoding = "UTF-8")
-
-df <- fromJSON(response, flatten = TRUE) %>% 
-  data.frame()
 
 
 
