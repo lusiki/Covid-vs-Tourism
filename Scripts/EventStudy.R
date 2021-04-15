@@ -43,7 +43,6 @@ VALAMAR <- fromJSON(response, flatten = TRUE) %>%
           RIVP = as.numeric(gsub("(.*),.*", "\\1", RIVP)))
 
 
-th <-
 
 TOURISMdta <- left_join(ARENA, MAISTRA,VALAMAR, by=c("Date")) %>% 
   inner_join(.,VALAMAR, by=c("Date")) %>%
@@ -68,7 +67,7 @@ rates_indx <- get_rates_from_prices(Crobex,
                                     multi_day = TRUE,
                                     compounding = "continuous")
 
-
+colnames(rates_indx) <- "Crobex"
 
 
 securities_returns <- apply_market_model(
@@ -86,7 +85,9 @@ parametric_tests(list_of_returns = securities_returns,
                  event_end = as.Date("2020-04-14"))
 
 
-
+nonparametric_tests(list_of_returns = securities_returns,
+                    event_start = as.Date("2020-02-24"),
+                    event_end = as.Date("2020-04-14"))
 
 
 

@@ -26,9 +26,17 @@ plot(es)
 
 
 
+es1 <- eventstudy(firm.returns = Returns,
+                 event.list = SplitD,
+                 event.window = 40,
+                 type = "marketModel",
+                 to.remap = TRUE,
+                 remap = "cumsum",
+                 inference = TRUE,
+                 inference.strategy = "bootstrap",
+                 model.args = list(market.returns=rates_indx$Crobex))
 
-
-
+plot(es1)
 
 
 
