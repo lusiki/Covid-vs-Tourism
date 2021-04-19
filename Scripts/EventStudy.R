@@ -6,11 +6,46 @@ library(plyr)
 library(zoo)
 library(httr)
 library(plotly)
-library(TSstudio)
 library(jsonlite)
 library(dplyr)
 library(tidyr)
 library(Quandl)
+
+
+
+ISIN <- readxl::read_xlsx("./Data/ISIN_list.xlsx") %>% select(ISIN) 
+
+links <- c()
+for( i in ISIN){ 
+  links <- paste0('https://zse.hr/json/securityHistory/', i,
+                  '/2019-01-01/2021-04-13/hr?trading_model_id=ALL')
+ }
+
+rawDta <- c()
+
+for (i in links){
+  
+rawDta <- fromJSON(content(GET(i), as = "text", encoding = "UTF-8")) 
+}
+
+df <- rawDta %>% data.frame()
+
+
+r <- GET("https://zse.hr/json/securityHistory/HRARNTRA0004/2019-01-01/2021-04-13/hr?trading_model_id=ALL")
+JLSA <- fromJSON(content(GET("https://zse.hr/json/securityHistory/HRTUHORA0001/2019-01-01/2021-04-13/hr?trading_model_id=ALL"), as = "text", encoding = "UTF-8"))
+ 
+  JLSA %>% data.frame() %>%
+  select(Date = rows.date, ARNT = rows.last_price ) %>%
+  mutate( Date = gsub("[.]$","", Date)) %>%
+  mutate( Date = as.Date(Date,"%d.%m.%Y"),
+          ARNT = as.numeric(gsub("(.*),.*", "\\1", ARNT)))
+
+
+
+
+
+
+
 
 r <- GET("https://zse.hr/json/securityHistory/HRARNTRA0004/2019-01-01/2021-04-13/hr?trading_model_id=ALL")
 response <- content(r, as = "text", encoding = "UTF-8")
@@ -46,7 +81,8 @@ VALAMAR <- fromJSON(response, flatten = TRUE) %>%
 
 TOURISMdta <- left_join(ARENA, MAISTRA,VALAMAR, by=c("Date")) %>% 
   inner_join(.,VALAMAR, by=c("Date")) %>%
-  distinct(Date, .keep_all=TRUE) 
+  distinct(Date, .keep_all=TRUE) %>%
+  drop_na()
 
 TOURISMdta <- zoo(TOURISMdta[,-1], order.by = TOURISMdta$Date)
 
