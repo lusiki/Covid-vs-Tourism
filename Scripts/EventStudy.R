@@ -10,79 +10,42 @@ library(jsonlite)
 library(dplyr)
 library(tidyr)
 library(Quandl)
-
+library(stringr)
 
 
 ISIN <- readxl::read_xlsx("./Data/ISIN_list.xlsx") %>% select(ISIN) 
 
 links <- c()
+rawDta <- c()
 for( i in ISIN){ 
   links <- paste0('https://zse.hr/json/securityHistory/', i,
                   '/2019-01-01/2021-04-13/hr?trading_model_id=ALL')
- }
-
-rawDta <- c()
-
+}
 for (i in links){
-  
-rawDta <- fromJSON(content(GET(i), as = "text", encoding = "UTF-8")) 
+rawDta[[i]] <- fromJSON(content(GET(i), as = "text", encoding = "UTF-8")) 
 }
 
-df <- rawDta %>% data.frame()
-
-
-r <- GET("https://zse.hr/json/securityHistory/HRARNTRA0004/2019-01-01/2021-04-13/hr?trading_model_id=ALL")
-JLSA <- fromJSON(content(GET("https://zse.hr/json/securityHistory/HRTUHORA0001/2019-01-01/2021-04-13/hr?trading_model_id=ALL"), as = "text", encoding = "UTF-8"))
- 
-  JLSA %>% data.frame() %>%
-  select(Date = rows.date, ARNT = rows.last_price ) %>%
-  mutate( Date = gsub("[.]$","", Date)) %>%
-  mutate( Date = as.Date(Date,"%d.%m.%Y"),
-          ARNT = as.numeric(gsub("(.*),.*", "\\1", ARNT)))
+stockDF <- lapply(rawDta, '[[', "rows") %>% bind_rows()
 
 
 
-
-
-
-
-
-r <- GET("https://zse.hr/json/securityHistory/HRARNTRA0004/2019-01-01/2021-04-13/hr?trading_model_id=ALL")
-response <- content(r, as = "text", encoding = "UTF-8")
-ARENA <- fromJSON(response, flatten = TRUE) %>% 
-  data.frame() %>%
-  select(Date = rows.date, ARNT = rows.last_price ) %>%
-  mutate( Date = gsub("[.]$","", Date)) %>%
-  mutate( Date = as.Date(Date,"%d.%m.%Y"),
-          ARNT = as.numeric(gsub("(.*),.*", "\\1", ARNT)))
-
- 
-
-r <- GET("https://zse.hr/json/securityHistory/HRMAISRA0007/2019-01-01/2021-04-13/hr?trading_model_id=ALL")
-response <- content(r, as = "text", encoding = "UTF-8")
-MAISTRA <- fromJSON(response, flatten = TRUE) %>% 
-  data.frame() %>%
-  select(Date = rows.date, MAIS = rows.last_price ) %>%
-  mutate( Date = gsub("[.]$","", Date)) %>%
-  mutate( Date = as.Date(Date,"%d.%m.%Y"),
-          MAIS = as.numeric(gsub("(.*),.*", "\\1", MAIS)))
-
-
-r <- GET("https://zse.hr/json/securityHistory/HRRIVPRA0000/2019-01-01/2021-04-13/hr?trading_model_id=ALL")
-response <- content(r, as = "text", encoding = "UTF-8")
-VALAMAR <- fromJSON(response, flatten = TRUE) %>% 
-  data.frame() %>%
-  select(Date = rows.date, RIVP = rows.last_price ) %>%
-  mutate( Date = gsub("[.]$","", Date)) %>%
-  mutate( Date = as.Date(Date,"%d.%m.%Y"),
-          RIVP = as.numeric(gsub("(.*),.*", "\\1", RIVP)))
-
-
-
-TOURISMdta <- left_join(ARENA, MAISTRA,VALAMAR, by=c("Date")) %>% 
-  inner_join(.,VALAMAR, by=c("Date")) %>%
+TOURISMdta <- stockDF %>% select(Date = date, Close = last_price, url) %>%
+  mutate(Date = gsub("[.]$","", Date)) %>%
+  mutate(Ticker = str_sub(.$url,-37,-34)) %>%
+  mutate(Close = as.numeric(gsub("(.*),.*", "\\1", Close))) %>%
+  select(-url) %>%
+  group_by(Ticker) %>%
+  mutate(n = n()) %>%
+  ungroup() %>% 
+  filter(n > 100) %>%
+  select(-n) %>%
+  group_by(Ticker) %>%
   distinct(Date, .keep_all=TRUE) %>%
-  drop_na()
+  ungroup() %>%
+  tidyr::spread(Ticker, Close, fill=0) %>%
+  mutate( Date = as.Date(Date,"%d.%m.%Y")) %>%
+  arrange(desc(Date))
+
 
 TOURISMdta <- zoo(TOURISMdta[,-1], order.by = TOURISMdta$Date)
 
