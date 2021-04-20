@@ -60,12 +60,15 @@ rates <- get_rates_from_prices(TOURISMdta,
                                multi_day = TRUE,
                                compounding = "continuous")
 
-ratesDF <- as.data.frame(rates)
+ratesDF <- data.frame(Date = rownames(ratesDF), rates) %>% mutate(Date = as.Date(Date,"%Y-%m-%d"))
+rownames(ratesDF) <- NULL
 
 ratesDF[sapply(ratesDF, is.infinite)] <- NA
 ratesDF[sapply(ratesDF, is.nan)] <- NA
 ratesDF[sapply(ratesDF, is.na)] <- 0
-TOURISMdta <- zoo(ratesDF)
+
+
+rates <-  zoo(ratesDF[,-1], order.by = ratesDF$Date)
 
 
 

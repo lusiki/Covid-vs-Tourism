@@ -8,8 +8,8 @@ SplitD <- data.frame(Name=c(rep("ARNT", 40),
                                     by = "day",
                                     length.out = 40),3))
 
-SplitD <- data.frame(name=c("ARNT","MAIS","RIVP"),
-                     when = rep(as.Date("2020-02-24"),3))
+SplitD <- data.frame(name=colnames(rates),
+                     when = rep(as.Date("2020-02-24"),12))
 
 Returns <- na.omit(rates)
 
