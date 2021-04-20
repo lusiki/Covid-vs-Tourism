@@ -50,8 +50,7 @@ TOURISMdta <- stockDF %>% select(Date = date, Close = last_price, url) %>%
 TOURISMdta <- zoo(TOURISMdta[,-1], order.by = TOURISMdta$Date)
 
 
-
-Quandl.api_key("jvwknzKzNdiuqGPCyXcT")
+source("./Secret/Passkey.R")
 Crobex <- Quandl("ZAGREBSE/CROBEX", type = "zoo",collapse = "daily",start_date = "2019-01-02", end_date = Sys.Date())
 
 
@@ -60,6 +59,15 @@ rates <- get_rates_from_prices(TOURISMdta,
                                quote = "Close",
                                multi_day = TRUE,
                                compounding = "continuous")
+
+ratesDF <- as.data.frame(rates)
+
+ratesDF[sapply(ratesDF, is.infinite)] <- NA
+ratesDF[sapply(ratesDF, is.nan)] <- NA
+ratesDF[sapply(ratesDF, is.na)] <- 0
+TOURISMdta <- zoo(ratesDF)
+
+
 
 rates_indx <- get_rates_from_prices(Crobex, 
                                     quote = "Close",
