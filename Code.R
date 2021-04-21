@@ -25,7 +25,7 @@ library(tseries)
 
 # PODACI----
 
-
+ 
 Quandl.api_key("jvwknzKzNdiuqGPCyXcT")
 CrobexTur <- Quandl("ZAGREBSE/CROBEXTURIST",type = "xts",collapse = "daily",start_date = "2019-01-01", end_date = Sys.Date())
 Crobex <- Quandl("ZAGREBSE/CROBEX", type = "xts",collapse = "daily",start_date = "2019-01-01", end_date = Sys.Date())
