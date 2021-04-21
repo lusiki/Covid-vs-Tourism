@@ -23,8 +23,6 @@ fontsize: 12pt
 link-citations: yes
 ---
 
-
-
 ```{r library, warning=FALSE, include=FALSE}
 
 library(estudy2)
@@ -43,8 +41,6 @@ library(stringr)
 library(eventstudies)
         
 ```
-
-
 
 # INTRODUCTION
 
@@ -84,10 +80,10 @@ TOURISMdta <- stockDF %>% select(Date = date, Close = last_price, url) %>%
   mutate(Close = as.numeric(gsub("(.*),.*", "\\1", Close))) %>%
   select(-url) %>%
   group_by(Ticker) %>%
-  mutate(n = n()) %>%
+  dplyr::mutate(n = n()) %>%
   ungroup() %>% 
-  filter(n > 100) %>%
-  select(-n) %>%
+  dplyr::filter(n > 100) %>%
+  dplyr::select(-n) %>%
   group_by(Ticker) %>%
   distinct(Date, .keep_all=TRUE) %>%
   ungroup() %>%
@@ -107,14 +103,12 @@ rates <- get_rates_from_prices(TOURISMdta,
                                multi_day = TRUE,
                                compounding = "continuous")
 
+ratesDF <- data.frame(rates)
 ratesDF <- data.frame(Date = rownames(ratesDF), rates) %>% mutate(Date = as.Date(Date,"%Y-%m-%d"))
 rownames(ratesDF) <- NULL
-
 ratesDF[sapply(ratesDF, is.infinite)] <- NA
 ratesDF[sapply(ratesDF, is.nan)] <- NA
 ratesDF[sapply(ratesDF, is.na)] <- 0
-
-
 rates <-  zoo(ratesDF[,-1], order.by = ratesDF$Date)
 ```
 
@@ -198,7 +192,7 @@ es <- eventstudy(firm.returns = Returns,
 plot(es)
 ```
 
-```{r vizNOexter, echo=FALSE, message=FALSE, warning=FALSE}
+```{r vizCROBEXexter, echo=FALSE, message=FALSE, warning=FALSE}
 es2 <- eventstudy(firm.returns = Returns,
                  event.list = SplitD,
                  event.window = 40,
@@ -212,7 +206,21 @@ es2 <- eventstudy(firm.returns = Returns,
 plot(es2)
 ```
 
+```{r vizGOLDexter, echo=FALSE, message=FALSE, warning=FALSE}
+es3 <- eventstudy(firm.returns = Returns,
+                  event.list = SplitD,
+                  event.window = 40,
+                  type = "marketModel",
+                  to.remap = TRUE,
+                  remap = "cumsum",
+                  inference = TRUE,
+                  inference.strategy = "bootstrap",
+                  model.args = list(market.returns=rates_indx$Crobex,
+                  others=add_indx$gold,
+                  market.returns.purge=TRUE))
 
+plot(es3)
+```
 
 # CONCLUSION
 
