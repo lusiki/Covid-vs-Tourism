@@ -51,7 +51,7 @@ TOURISMdta <- zoo(TOURISMdta[,-1], order.by = TOURISMdta$Date)
 
 
 source("./Secret/Passkey.R")
-Crobex <- Quandl("ZAGREBSE/CROBEX", type = "zoo",collapse = "daily",start_date = "2019-01-02", end_date = Sys.Date())
+Crobex <- Quandl("ZAGREBSE/CROBEX", type = "zoo",collapse = "daily", start_date = "2019-01-02", end_date = Sys.Date())
 
 
 
