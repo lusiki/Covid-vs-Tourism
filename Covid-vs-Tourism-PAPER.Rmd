@@ -1,0 +1,905 @@
+---
+title: "The effect of COVID-19 pandemic on Croatian tourist sector"
+author: "Bogdan, S. and Sikic, L."
+date: '`r format(Sys.time(), "%d %B, %Y")`'
+header-includes:
+  - \usepackage{caption}
+  - \captionsetup[figure]{labelformat=empty}
+output:
+  bookdown::tufte_html2:
+    number_sections: no
+    toc: yes
+  bookdown::pdf_document2:
+    includes:
+      before_body:
+      in_header: preamble.tex
+    keep_tex: yes
+    latex_engine: xelatex
+    number_sections: true
+    toc: no
+  bookdown::word_document2: null 
+bibliography: "D:/LUKA/Academic/Covid-vs-Tourism/Literatura/reference.bib"
+fontsize: 12pt
+link-citations: yes
+---
+
+```{r library, warning=FALSE, include=FALSE}
+library(tidy)
+library(quantmod)
+library(Quandl)
+library(tidyverse)
+library(tidyquant)
+library(timetk)
+library(forecast)
+library(highcharter)
+library(coronavirus)
+library(tidycovid19)
+library(zoo)
+library(kableExtra)
+library(rvest)
+library(tidyr)
+library(reshape2)
+library(tsoutliers)
+library(tseries)
+        
+```
+
+```{r import_Crosentilex, echo=FALSE,  message = FALSE, warning = FALSE}
+
+
+CroSentilex_n <- read.delim("C:/Users/Lukas/Dropbox/Mislav@Luka/crosentilex-negatives.txt",
+                                   header = FALSE,
+                                   sep = " ",
+                                   stringsAsFactors = FALSE,
+                                   fileEncoding = "UTF-8")  %>%
+                   rename(word = "V1", sentiment = "V2" ) %>%
+                   mutate(brija = "NEG")
+ 
+ CroSentilex_p  <- read.delim("C:/Users/Lukas/Dropbox/Mislav@Luka/crosentilex-positives.txt",
+                                   header = FALSE,
+                                   sep = " ",
+                                   stringsAsFactors = FALSE,
+                                   fileEncoding = "UTF-8") %>%
+                    rename(word = "V1", sentiment = "V2" ) %>%
+                    mutate(brija = "POZ")
+ 
+ Crosentilex_sve <- rbind(setDT(CroSentilex_n), setDT(CroSentilex_p))
+ 
+ 
+ CroSentilex_Gold  <- read.delim2("C:/Users/Lukas/Dropbox/Mislav@Luka/gs-sentiment-annotations.txt",
+                                 header = FALSE,
+                                 sep = " ",
+                                 stringsAsFactors = FALSE) %>%
+                    rename(word = "V1", sentiment = "V2" ) 
+
+ Encoding(CroSentilex_Gold$word) <- "UTF-8"
+ CroSentilex_Gold[1,1] <- "dati"
+ CroSentilex_Gold$sentiment <- str_replace(CroSentilex_Gold$sentiment , "-", "1")
+ CroSentilex_Gold$sentiment <- str_replace(CroSentilex_Gold$sentiment , "\\+", "2")
+ CroSentilex_Gold$sentiment <- as.numeric(unlist(CroSentilex_Gold$sentiment))
+ 
+ 
+ 
+ 
+ stopwords_cro <- get_stopwords(language = "hr", source = "stopwords-iso")
+my_stop_words <- tibble(
+  word = c(
+    "jedan",
+    "e","prvi", "dva","dvije","drugi",
+    "tri","treći","pet","kod",
+    "ove","ova",  "ovo","bez",
+    "evo","oko",  "om", "ek",
+    "mil","tko","šest", "sedam",
+    "osam",   "čim", "zbog",
+    "prema", "dok","zato", "koji", 
+    "im", "čak","među", "tek",
+    "koliko", "tko","kod","poput", 
+    "baš", "dakle", "osim", "svih", 
+    "svoju", "odnosno", "gdje",
+    "kojoj", "ovi", "toga",
+     "ubera", "vozača", "hrvatskoj", "usluge", "godine", "više", "taksi", "taxi", "taksija", "taksija", "kaže", "rekao"
+  ),
+  lexicon = "lux"
+)
+stop_corpus <- my_stop_words %>%
+  bind_rows(stopwords_cro)
+
+
+```
+
+```{r import_Data, echo=FALSE,  message = FALSE, warning = FALSE}
+
+taxi <- read.csv2("D:/Luka/Academic/Majetic_Uber/R_project_taxi/Podatci/TaksiFinalData.csv", stringsAsFactors = FALSE)  %>%
+  mutate(dejt = as.Date(dejt, "%d.%m.%Y" ), 
+         grupa_1 = toupper(grupa_1)) %>%      
+  arrange(dejt) %>%
+  filter(!duplicated(idClanka))
+
+# Napravi automatski
+out <- read.csv2("D:/Luka/Academic/Majetic_Uber/R_project_taxi/Podatci/13_visak.csv", stringsAsFactors = FALSE, header = FALSE) 
+
+out %>% 
+  mutate(id = str_extract("/\\d+", V2)) -> aa
+#  str_extract("/\\d+", V2)
+#.[str_detect(., "/\\d+")]
+
+out <- c(1244111, 1244334, 1244587, 1247674, 1255495, 1256587, 1256489, 1257518, 1260218, 1260650, 1269678, 1252506, 1252259 )
+
+`%notin%` <- Negate(`%in%`)
+
+
+taxi <- taxi %>% filter(idClanka %notin% out)
+
+
+```
+
+
+```{r define_Data, echo=FALSE,  message = FALSE, warning = FALSE}
+
+sukob <- taxi %>%
+  filter(sukob %in% c("trad" , "kont" , "repo" , "sukob" ,  "kont2"))
+
+
+uber <- taxi %>%
+  filter(uber == "uber")
+
+
+sukob_words <- taxi %>%
+  filter(sukob %in% c("trad" , "kont" , "repo" , "sukob" ,  "kont2")) %>%
+  unnest_tokens(word, tekst) %>%
+  anti_join(stop_corpus, by = "word") %>%
+  mutate(word = gsub("\\d+", NA, word)) %>%
+  mutate(word = gsub("^[a-zA-Z]$", NA, word)) %>%
+  filter(!is.na(word))
+
+uber_words <- taxi %>%
+  filter(uber == "uber") %>%
+  unnest_tokens(word, tekst) %>%
+  anti_join(stop_corpus, by = "word") %>%
+  mutate(word = gsub("\\d+", NA, word)) %>%
+  mutate(word = gsub("^[a-zA-Z]$", NA, word)) %>%
+  filter(!is.na(word))
+
+korpus_words <- taxi %>%
+  unnest_tokens(word, tekst) %>%
+  anti_join(stop_corpus, by = "word") %>%
+  mutate(word = gsub("\\d+", NA, word)) %>%
+  mutate(word = gsub("^[a-zA-Z]$", NA, word)) %>%
+  filter(!is.na(word))
+
+```
+
+
+# INTRODUCTION
+
+# RESEARCH BACKGROUND AND CONTEXT 
+
+# DATA COLLECTION AND METHODOLOGY
+
+The data for the analysis of Croatian taxi market disruption due to Uber is collected from the online edition of newspaper Večernji list. First, we collected all articles (167 600) published in the period November, 2015 to September, 2018 from Vecernji list with web-scraping methods and second, retrieved all articles that contain at least one occurence of the word "Uber" in the article. This procedure resulted in 370 Uber related articles which were further filtered "by hand" to exclude unrelated, promotional or otherwise insignificant articles. After the filtering procedure, 165 articles containing `r nrow(korpus_words)` words strictly related to Uber were left for the analysis as our empirical sample. Metadata of our empirical text corpus contains information on the title, author, publishing date, keywords,number of comments and views. We extended our sample with the one more variable that represents one of the five topics that we ascribe to every article. To prepare the text for the analysis, the corpus was tokenized to one (unigram) and two (bigram) word units, stop words and numbers were removed and lemmatisation and stemming was applied.
+
+## Methodology
+
+We analyze Uber text corpus with standard descriptive statistics like word count, word occurrences through time, term frequency, word correlations and sentiment analysis. The term frequency (tf) measures how often a word occurs in a document and inverse term frequency (itf) extends this concept by decreasing the weight for commonly used words and increasing the weight for words that are not used often a collection of documents. We combine these two concepts to calculate a term’s TF-IDF statistic by the multiplication of the two quantities (tf and idf) and achieve a measure of the frequency of a term adjusted for how rarely it is used. Word correlations count common pairs of words co-appearing within the same newspaper article and we use this measure to investigate terms correlated with most important words. 
+
+The sentiment analysis is made on the basis of the Croatian Sentiment Lexicon (CroSentiLex) (http://takelab.fer.hr/sentilex) which contains 37000 words ranked by positivity and negativity according to the algorithmically assigned scores. The analyzed text corpus was merged with CroSentiLex dictionary to attribute each word with the positivity and negativity score. The difference in scores between positive and negative words was calculated and the nett scores per word were multiplied by the number of respective word occurrences in each time period (quarter) to attain the aggregate measure of sentiment. Higher sentiment score is therefore related to more positive sentiment and vice versa.
+
+## Insigthts from the data and topic identification
+
+In this section we analyze the full text corpus. (Kako su odabrane teme!?)
+
+The Table X shows most important words in the full text corpus. All words with more than 100 occurrences are shown along with the respective number of occurences and relative share of the term in the full corpus. 
+
+```{r unigram_Words, echo=FALSE,  message = FALSE, warning = FALSE}
+
+korpus_words %>% 
+  count(word) %>%
+  arrange(desc(n)) %>%
+  mutate(ratio = (n / sum(n))*100) %>%
+  mutate(ratio = round(ratio,2)) %>%
+  mutate(ratio = paste0(ratio,"%")) %>%
+  filter(n > 100) %>%
+  arrange(desc(n))  -> corpus
+
+# ENGLESKI
+
+corpus %>% 
+    mutate(words = recode(word,
+                         'prijevoza' = "transport",
+                         'taksisti' = "taxi drivers",
+                         "uber" = "uber",
+                         "taksista" = "taxi drivers",
+                        "vozila"  = "vehicles",
+                        "zakona" = "law"  ,
+                        "kuna"  = "kuna" ,
+                        "prijevoz" = "transport",
+                        "zagrebu" = "zagreb",
+                        "prometa" = "traffic" ,
+                        "vozači" = "drivers",
+                        "uberu" = "uber" ,
+                        "usluga" = "service"
+                         )) %>%
+  select(words,n,ratio) %>%
+  rename(Word = words, N = n, Ratio = ratio) %>%
+  distinct(.,Word,.keep_all = T) -> corpus
+  
+  
+
+
+kable(corpus) %>% # , caption = "Table X: Most frequent words (>100)"
+  kable_styling()
+
+
+#  scroll_box(width = "500px", height = "300px")
+
+
+```
+
+The Table X shows the most important bigrams.
+
+```{r bigram_Words, echo=FALSE,  message = FALSE, warning = FALSE}
+
+
+
+##BIGRAMI FULL
+
+bigrami <- function(dataset){
+
+dataset %>%
+  unnest_tokens(bigram, tekst, token = "ngrams", n = 2) %>%
+  count(bigram, sort = TRUE) -> taxi_bigram 
+
+
+bigrams_separated <- taxi_bigram %>%
+  separate(bigram, c("word1", "word2"), sep = " ")
+
+bigrams_filtered <- bigrams_separated %>%
+  filter(!word1 %in% stop_corpus$word) %>%
+  filter(!word2 %in% stop_corpus$word) %>%
+  filter(!grepl("\\d+", word1)) %>%
+  filter(!grepl("\\d+", word2)) %>% 
+  filter(!grepl("^[a-zA-Z]$", word1)) %>%
+  filter(!grepl("^[a-zA-Z]$", word2)) 
+
+# new bigram counts:
+bigram_counts <- bigrams_filtered %>% 
+  count(word1, word2, sort = TRUE)
+
+bigrams_united <- bigrams_filtered %>%
+  unite(bigram, word1, word2, sep = " ")
+
+bigrams_united %>%
+  arrange(desc(n)) %>%
+  mutate(ratio = (n / sum(n))*100) %>%
+  mutate(ratio = round(ratio,2)) %>%
+  mutate(ratio = paste0(ratio,"%")) %>%
+  filter(n > 25) -> UniBigram 
+
+}
+
+
+
+#bigrami(uber)
+
+
+CountBigram <- bigrami(taxi)
+
+CountBigram %>%
+    mutate(Bigram = recode(bigram,
+                         'cestovnom prometu' = "road traffic",
+                         'mora prometa' = "sea traffic",
+                         'milijuna kuna' = "milion kuna",
+                         'novog zakona' = "new law")) %>%
+  rename(N=n, Ratio = ratio) %>%
+  select(Bigram, N, Ratio) %>%
+  kable(.) %>% kable_styling() # , caption = "Most frequent bigrams (>25)"
+                         
+  
+
+#bigrami(sukob)
+
+```
+
+The most correlated words are shown in the Graph X.
+
+```{r corrs_corpus, echo=FALSE,  message = FALSE, warning = FALSE}
+
+
+rijeci_korelacija <- c("konkurencija", "nelegalno", "dozvola", "zakon","zarada", "profit", "sigurnost")
+
+
+# korelacije
+
+korpus_words %>%
+  select(idClanka, word, sukob) %>%
+  pairwise_count(word, idClanka, sort = TRUE) -> korpus_word_pairs
+
+# vrijeme
+
+korpus_word_pairs %>%
+  filter(item2 %in% rijeci_korelacija) %>% 
+  group_by(item2) %>%
+  slice(1:5) %>%
+  ungroup()  %>%
+  mutate(item1 = recode(item1,
+                         'prijevoza' = "transport",
+                         'taksisti' = "taxi drivers",
+                         "uber" = "uber",
+                         "taksista" = "taxi drivers",
+                        "vozila"  = "vehicles",
+                        "zakona" = "law"  ,
+                        "kuna"  = "kuna" ,
+                        "prijevoz" = "transport",
+                        "zagrebu" = "zagreb",
+                        "prometa" = "traffic" ,
+                        "vozači" = "drivers",
+                        "uberu" = "uber" ,
+                        "usluga" = "service",
+                        "mora" = "must",
+                        "može" = "can",
+                        "prijevoza" = "traffic",
+                        "uberu" = "uber",
+                        "smatraju" = "consider",
+                        "protiv" = "against",
+                        "kažu" = "claim",
+                        "prijevozu" = "traffic",
+                        "tržište" = "market")) %>%
+  mutate(item2 = recode(item2,
+                         'sigurnost' = "safety",
+                         'zakon' = "law",
+                         "uber" = "uber",
+                        "vozila"  = "vehicles",
+                        "zakona" = "law",
+                        "dozvola"  = "licence" ,
+                        "konkurencija" = "competition",
+                        "nelegalno" = "illegal" )) %>%
+  mutate(item2 = reorder(item2, n)) %>%
+  ggplot(aes(item1, n)) +
+  geom_bar(stat = "identity") +
+  facet_wrap(~ item2, scales = "free") +
+  coord_flip() +
+  labs(title="Graph X: Most correlated words with:",
+        x ="Word", y = "Number of words")
+
+
+
+
+
+
+```
+
+```{r additionals, eval = FALSE, echo = FALSE, fig.height=12}
+
+
+rijeci <- c("novac", "plaća", "profit", "promet", "zapošljavanje", "sigurnost", "nesreće", "ozljeda", "zarada", "dobit")
+
+korpus_word_pairs %>%
+  filter(item2 %in% rijeci) %>% 
+  group_by(item2) %>%
+  slice(1:15) %>%
+  ungroup() %>%
+  mutate(item2 = reorder(item2, n)) %>%
+  ggplot(aes(item1, n)) +
+  geom_bar(stat = "identity") +
+  facet_wrap(~ item2, scales = "free") +
+  coord_flip() +
+  ggtitle("Most correlated words with:")
+
+
+
+
+korpus_words %>%
+  mutate(Datum = floor_date(dejt, "quarter")) %>% 
+  group_by(Datum) %>%
+  count(word) %>% 
+  mutate(gn = sum(n)) %>% 
+  filter(word %in% rijeci) %>%
+  ggplot(., aes(Datum, n / gn)) + 
+  geom_point() +
+  ggtitle("Most important terms through time(corpus conflict)") +
+  geom_smooth() +
+  facet_wrap(~ word, scales = "free_y") +
+  scale_y_continuous(labels = scales::percent_format())
+
+
+
+# bigrami
+
+taxi %>%
+unnest_tokens(bigram, tekst, token = "ngrams", n = 2) %>%
+  count(bigram, sort = TRUE) -> taxi_bigram 
+
+
+bigrams_separated <- taxi_bigram %>%
+  separate(bigram, c("word1", "word2"), sep = " ")
+
+bigrams_filtered <- bigrams_separated %>%
+  filter(!word1 %in% stop_corpus$word) %>%
+  filter(!word2 %in% stop_corpus$word) %>%
+  filter(!grepl("\\d+", word1)) %>%
+  filter(!grepl("\\d+", word2)) %>% 
+  filter(!grepl("^[a-zA-Z]$", word1)) %>%
+  filter(!grepl("^[a-zA-Z]$", word2)) 
+
+# new bigram counts:
+bigram_counts <- bigrams_filtered %>% 
+  count(word1, word2, sort = TRUE)
+
+bigrams_united <- bigrams_filtered %>%
+  unite(bigram, word1, word2, sep = " ")
+
+bigrams_united %>%
+  arrange(desc(n)) %>%
+  mutate(ratio = (n / sum(n))*100) %>%
+  mutate(ratio = round(ratio,2)) %>%
+  mutate(ratio = paste0(ratio,"%")) %>%
+  filter(n > 25) %>%
+  kable(.) %>% kable_styling() 
+
+bigrams_filtered %>%
+  filter(word1 %in% rijeci) %>% kable(.)
+
+bigrams_filtered %>%
+  filter(word2 %in% rijeci) %>% kable(.)
+
+bigrams_filtered %>%
+  filter(word1 == "sigurnost")
+
+bigrams_filtered %>%
+  filter(word2 == "sigurnost")
+
+bigrams_filtered %>%
+  filter(word2 == "ozljeda")
+
+```
+
+Time dynamics of most common word are shown on the Graph X.
+
+```{r time_corpus , echo=FALSE,  message = FALSE, warning = FALSE}
+
+korpus_words %>%
+  mutate(Datum = floor_date(dejt, "quarter")) %>% 
+  group_by(Datum) %>%
+  count(word) %>% 
+  mutate(gn = sum(n)) %>% 
+  filter(word %in% rijeci_korelacija) %>%
+  mutate(word = recode(word,
+                         'sigurnost' = "safety",
+                         'zakon' = "law",
+                         "uber" = "uber",
+                        "vozila"  = "vehicles",
+                        "zakona" = "law",
+                        "dozvola"  = "licence" ,
+                        "konkurencija" = "competition",
+                        "nelegalno" = "illegal",
+                        "zarada" = "profit")) %>%
+  ggplot(., aes(Datum, n / gn)) + 
+  geom_point() +
+  geom_smooth() +
+  facet_wrap(~ word, scales = "free_y") +
+  scale_y_continuous(labels = scales::percent_format()) +
+  labs(title="Graph X: Most important terms through time(full corpus):",
+        x ="Date", y = "% of total words(quarterly)")
+
+
+
+```
+
+# RESULTS AND DISCUSSION
+
+
+## Corpus conflict
+
+In this chapter we focus on text corpus realated to the topic "conflict".(obrazližiti zašto;prethodno objasniti kako su teme odabrane)
+
+Most important unigrams and bigrams from the corpus conflict are shown in the Table X and Table X.
+
+```{r unigram_Words_conflict,  echo=FALSE}
+
+#uber_words %>% 
+# count(word) %>%
+#  arrange(desc(n)) %>%
+#  top_n(30) -> uber_corpus
+
+#kable(uber_corpus,
+#                        caption = "Najčešće riječi u UBER korpusu") %>%
+#  kable_styling() %>%
+#  scroll_box(width = "500px", height = "300px")
+
+
+sukob_words %>% 
+  count(word) %>%
+  arrange(desc(n)) %>%
+  mutate(ratio = (n / sum(n))*100) %>%
+  mutate(ratio = round(ratio,2)) %>%
+  mutate(ratio = paste0(ratio,"%")) %>%
+  filter(n > 100) %>%
+  mutate(Word = recode(word,
+                         'sigurnost' = "safety",
+                         'zakona' = "law",
+                         "uber" = "uber",
+                        "vozila"  = "vehicles",
+                       'taksisti' = "taxi drivers",
+                       'taksista' = "taxi drivers")) %>%
+  distinct(.,Word,.keep_all = T) %>%
+  rename( N = n, Ratio = ratio) %>%
+  select(Word,N,Ratio)-> sukob_corpus
+
+
+
+kable(sukob_corpus) %>% # ,caption = "Table X: Most frequent words (>100)"
+  kable_styling() 
+
+```
+
+```{r bigram_Words_conflict,  echo=FALSE}
+
+sukobBigr <- bigrami(sukob)
+
+
+sukobBigr %>%
+    mutate(Bigram = recode(bigram,
+                         'cestovnom prometu' = "road traffic",
+                         'mora prometa' = "sea traffic",
+                         'milijuna kuna' = "milion kuna",
+                         'novog zakona' = "new law")) %>%
+  rename(N=n, Ratio = ratio) %>%
+  select(Bigram, N, Ratio) %>%
+  kable(.) %>% kable_styling() # , caption = "Most frequent bigrams (>25)"
+
+```
+
+Graph X shows most correlated words with selected important words from corpus "conflict.
+
+```{r parwiseCount_conflict, echo=FALSE,  message = FALSE, warning = FALSE, fig.height=7}
+
+###PARWISE COUNT###
+
+# prikazuju se samo tri riječi prve
+
+sukob_words %>%
+  select(idClanka, word, sukob) %>%
+  pairwise_count(word, idClanka, sort = TRUE) -> sukob_word_pairs
+
+
+# sukob_words %>%
+#  select(sukob, word) %>%
+#  mutate(sukob = case_when(sukob == "trad" ~ 1,
+#            sukob == "kont" ~ 2,
+#            sukob == "kont2" ~3,
+#            sukob == "repo" ~ 4)) %>%
+#  mutate(sukob = as.integer(sukob)) %>% #str()
+#  pairwise_count(word, sukob, sort = TRUE) -> sukob_word_pairs_sukob
+
+
+sukob_rijeci <- c("prijedlog", "prosvjed", "prijetnje", "napad" ) # šteta
+uber_rijeci <- c("posao", "zarada", "koristi", "cijena", "plaćanje")
+korpus_rijeci <- c("zakon", "nelegalno", "politika", "ministar","turizam", "sigurnost")
+
+##PARWISE COUNT SA IZABRANIM RIJEČIMA##
+
+
+
+sukob_word_pairs %>%
+  filter(item2 %in% sukob_rijeci) %>% 
+  group_by(item2) %>%
+  slice(1:4) %>%
+  ungroup() %>%
+  mutate(item1 = recode(item1,
+                         'prijevoza' = "transport",
+                         'taksisti' = "taxi drivers",
+                         "uber" = "uber",
+                         "taksista" = "taxi drivers",
+                        "vozila"  = "vehicles",
+                        "zakona" = "law"  ,
+                        "kuna"  = "kuna" ,
+                        "prijevoz" = "transport",
+                        "zagrebu" = "zagreb",
+                        "prometa" = "traffic" ,
+                        "vozači" = "drivers",
+                        "uberu" = "uber" ,
+                        "usluga" = "service",
+                        "mora" = "must",
+                        "može" = "can",
+                        "prijevoza" = "traffic",
+                        "uberu" = "uber",
+                        "smatraju" = "consider",
+                        "protiv" = "against",
+                        "kažu" = "claim",
+                        "prijevozu" = "traffic",
+                        "tržište" = "market",
+                        "imaju" = "have",
+                        "infrastrukture" = "infrastructure")) %>%
+  mutate(item2 = recode(item2,
+                         'napad' = "attack",
+                         'prijedlog' = "suggestion",
+                         "prijetnje" = "threats",
+                        "prosvjed"  = "demonstrations" )) %>%
+  mutate(item2 = reorder(item2, n)) %>%
+  ggplot(aes(item1, n)) +
+  geom_bar(stat = "identity") +
+  facet_wrap(~ item2, scales = "free") +
+  coord_flip() +
+  labs(title="Graph X: Most correlated words with:",
+        x ="Word", y = "Number of words") 
+
+```
+
+Graph X shows most important terms through time on the quarterly basis. 
+
+```{r time_Words, echo=FALSE,  message = FALSE, warning = FALSE   } 
+
+
+
+sukob_words %>%
+  mutate(Datum = floor_date(dejt, "quarter")) %>% 
+  group_by(Datum) %>%
+  count(word) %>% 
+  mutate(gn = sum(n)) %>% 
+  filter(word %in% sukob_rijeci) %>%
+  mutate(word = recode(word,
+                         'napad' = "attack",
+                         'prijetnje' = "threats",
+                         "prijedlog" = "suggestion",
+                        "prosvjed"  = "demonstrations")) %>%
+  ggplot(., aes(Datum, n / gn)) + 
+  geom_point() +
+  geom_smooth() +
+  facet_wrap(~ word, scales = "free_y") +
+  scale_y_continuous(labels = scales::percent_format())+
+  labs(title="Graph X: Most important terms through time(corpus conflict)",
+        x ="Date", y = "% of total words(quarterly)")
+
+```
+
+```{r, eval=FALSE, echo=FALSE,  message = FALSE, warning = FALSE }
+uber_words %>%
+  mutate(Datum = floor_date(dejt, "quarter")) %>% 
+  group_by(Datum) %>%
+  count(word) %>% 
+  mutate(gn = sum(n)) %>% 
+  filter(word %in% uber_rijeci) %>%
+  ggplot(., aes(Datum, n / gn)) + 
+  geom_point() +
+  ggtitle("Korpus Uber") +
+  geom_smooth() +
+  facet_wrap(~ word, scales = "free_y") +
+  scale_y_continuous(labels = scales::percent_format())
+
+
+korpus_words %>%
+  mutate(Datum = floor_date(dejt, "quarter")) %>% 
+  group_by(Datum) %>%
+  count(word) %>% 
+  mutate(gn = sum(n)) %>% 
+  filter(word %in% korpus_rijeci) %>%
+  ggplot(., aes(Datum, n / gn)) + 
+  geom_point() +
+  ggtitle("Korpus") +
+  geom_smooth() +
+  facet_wrap(~ word, scales = "free_y") +
+  scale_y_continuous(labels = scales::percent_format())
+
+
+```
+
+
+## Topic analysis
+
+This chapter covers topic analysis. (Moramo dati nazive temama;na engleskom;zasada ostavljam skraćeno)
+
+```{r IDF,echo=FALSE,  message=FALSE, warning=FALSE, fig.height=10}
+
+
+sukob_words %>%
+  count(sukob, word, sort = TRUE) %>%
+  bind_tf_idf(word, sukob, n) -> idf_sukob
+
+options(scipen = 1000000)
+idf_sukob %>%
+    mutate(word = factor(word, levels = rev(unique(word)))) %>% 
+    group_by(sukob) %>% 
+    select(sukob, word, tf_idf) %>%
+    arrange(desc(tf_idf)) %>% 
+    do(head(., n = 20)) %>% 
+    filter(!word %in% c("tremac", "davor", "nekih", "ovdje",
+                        "franković", "grabar", "kitarović",
+                        "trebao", "martina", "ivan", "ribić", "pilko"))   %>%
+  mutate(word = recode(word,
+                         'dojam' = "impression",
+                         'korisne' = "usefull",
+                         "ispitanih" = "surveyed",
+                         "odgovorilo" = "answered",
+                        "policijskoj"  = "police",
+                        "prijetnjama" = "threats"  ,
+                        "regulativa"  = "regulation" ,
+                        "verbalnom" = "verbal",
+                        "žale" = "complain",
+                        "napada" = "attack" ,
+                        "dubrovačko" = "dubrovnik",
+                        "nasilja" = "violence" ,
+                        "usluga" = "service",
+                        "opasnost" = "danger",
+                        "partnerima" = "partners",
+                        "pozitivna" = "positive",
+                        "prošlih" = "historic",
+                        "relikt" = "relict",
+                        "štete" = "damage",
+                        "prijedloga" = "proposal",
+                        "naknadu" = "compensation",
+                        "zakone" = "law",
+                        'cestama' = "road",
+                         'provodi' = "implement",
+                         "pismu" = "letter",
+                         "predstavnike" = "representative",
+                        "primjedbi"  = "complaints",
+                        "usluga" = "service"  ,
+                        "ovlasti"  = "authority" ,
+                        "umjesto" = "insteda",
+                        "direktive" = "directives",
+                        "dodatne" = "additional" ,
+                        "dovodi" = "bring",
+                        "interesu" = "interest" ,
+                        'izvješća' = "report",
+                         'mirnim' = "peacefull",
+                         "prekršajni" = "criminal",
+                         "općine" = "county",
+                        "italiji"  = "italy",
+                        "propisano" = "prescribed"  ,
+                        "visoki"  = "high" ,
+                        "usluga" = "service",
+                        "javni" = "public",
+                        "prijedloga" = "suggestion" ,
+                        "optužni" = "indictment",
+                        "prijavu" = "notification" ,
+                        "list" = "paper",
+                        "odbio" = "revoke",
+                        "večernji" = "night",
+                        'inspekcija' = "inspection",
+                         'prijedlog' = "suggestion",
+                         "aplikacija" = "application",
+                         "troškovi" = "costs",
+                        "napad"  = "attack",
+                        "gotovo" = "over"  ,
+                        "automobil"  = "car" ,
+                        "sati" = "hours",
+                        "policiji" = "police",
+                        "potom" = "after" ,
+                        "staklo" = "glass",
+                        "ubacili" = "throw into" ,
+                        "institucijama" = "institutions",
+                        'normalno' = "normal",
+                         'potpredsjednik' = "vice president",
+                         "spontano" = "spontaneous",
+                         "taxija" = "taxi",
+                        "automobilu"  = "car" )) %>%
+    ggplot(.,aes(reorder(word,tf_idf), tf_idf, fill = sukob)) +
+    geom_col(show.legend = FALSE) +
+    facet_wrap(~sukob, ncol = 2, scales = "free") +
+    coord_flip() +
+    labs(title="Graph X: Most important words by topic",
+        x ="Word", y = "TF-IDF statistic") -> gg_idf_1
+
+gg_idf_1
+
+```
+
+```{r parwiseCount_Uber,eval=FALSE, echo=FALSE, fig.height=12}
+
+#uber_rijeci <- c("posao", "zarada", "koristi", "cijena", "plaćanje")
+
+
+#korpus_words %>%
+#  select(idClanka, word) %>%
+#  pairwise_count(word, idClanka, sort = TRUE) -> korpus_word_pairs
+
+
+uber_words %>%
+  select(idClanka, word) %>%
+  pairwise_count(word, idClanka, sort = TRUE) -> uber_word_pairs
+#sukob_word_pairs_sukob %>%
+#  filter(item2 %in% sukob_rijeci) %>% 
+#  group_by(item2) %>%
+#  slice(1:10 ) %>%
+#  ungroup() %>%
+#  mutate(item2 = reorder(item2, n)) %>%
+#  ggplot(aes(item1, n)) +
+#  geom_bar(stat = "identity") +
+#  facet_wrap(~ item2, scales = "free") +
+#  coord_flip() + 
+#  ggtitle("Riječi(sukob_TEMA) koje su *najkoreliranije* sa:")
+
+
+uber_word_pairs %>%
+  filter(item1 %in% uber_rijeci) %>%
+  group_by(item1) %>%
+  top_n(5 ) %>%
+  ungroup() %>%
+  mutate(item2 = reorder(item2, n)) %>%
+  ggplot(aes(item2, n)) +
+  geom_bar(stat = "identity") +
+  facet_wrap(~ item1, scales = "free") +
+  coord_flip() + 
+  ggtitle("Most correlated terms(corpus Uber):")
+
+#korpus_word_pairs %>%
+#  filter(item1 %in% korpus_rijeci) %>%
+#  group_by(item1) %>%
+#  top_n(8 ) %>%
+#  ungroup() %>%
+#  mutate(item2 = reorder(item2, n)) %>%
+#  ggplot(aes(item2, n)) +
+#  geom_bar(stat = "identity") +
+#  facet_wrap(~ item1, scales = "free") +
+#  coord_flip() + 
+#  ggtitle("Riječi(korpus) koje su *najkoreliranije* sa:")
+
+
+```
+
+## Sentiment analysis
+
+```{r sentiment, echo=FALSE,  message = FALSE, warning = FALSE }
+
+##SENTIMENT_FUNKCIJA
+
+izracunaj_sentiment <- function(dataset) {
+
+dataset %>%
+  inner_join( Crosentilex_sve, by = "word") %>%
+  mutate(word = gsub("\\d+", NA, word)) %>%
+  mutate(word = gsub("^[a-zA-Z]$", NA, word)) %>%
+  filter(!is.na(word)) %>%
+  select(word, brija, dejt, sentiment) %>% 
+  unique() %>%
+  spread(. , brija, sentiment) %>%
+  mutate(sentiment = POZ - NEG) %>%
+  select(word, dejt, sentiment) %>% 
+  group_by(word) %>% 
+  mutate(count = n()) %>%
+  arrange(desc(count)) %>%
+  mutate( score = sentiment*count) %>%
+  ungroup() %>%
+  group_by(dejt) %>%
+  arrange(desc(dejt)) -> sm
+
+ 
+  
+
+sm %>%
+  select(dejt, score) %>%
+  group_by(Datum = floor_date(dejt, "quarter")) %>%
+  summarise(Tjedni_sent = sum(score, na.rm = TRUE)) %>%
+  ggplot(., aes(Datum, Tjedni_sent)) +
+  geom_bar(stat = "identity")+
+  labs(title="Graph X: Sentiment through time (quarterly)",
+        x ="Date", y = "Sentiment Score") -> gg_sentiment_kroz_vrijeme_qv
+
+
+#grid.arrange(gg_sentiment_kroz_vrijeme_qv, nrow = 2 )
+
+
+}
+
+fullCorpus <- izracunaj_sentiment(korpus_words)
+
+fullCorpus + ggtitle("Graph X: Sentiment through time (quarterly) for full text corpus")
+
+uberCorpus <- izracunaj_sentiment(uber_words)
+
+uberCorpus + ggtitle("Graph X: Sentiment through time (quarterly) for Uber text corpus")
+
+sukobCorpus <- izracunaj_sentiment(sukob_words)
+
+
+sukobCorpus + ggtitle("Graph X: Sentiment through time (quarterly) for conflict text corpus")
+
+```
+
+# CONCLUSION
+
+# BIBLIOGRAPHY
+
+
+
+
