@@ -6,7 +6,9 @@ header-includes:
   - \usepackage{caption}
   - \captionsetup[figure]{labelformat=empty}
 output:
-  bookdown::word_document2: null 
+  bookdown::tufte_html2:
+    number_sections: no
+    toc: yes
   bookdown::pdf_document2:
     includes:
       before_body:
@@ -15,9 +17,7 @@ output:
     latex_engine: xelatex
     number_sections: true
     toc: no
-  bookdown::tufte_html2:
-    number_sections: no
-    toc: yes
+  bookdown::word_document2: null 
 bibliography: "D:/LUKA/Academic/Covid-vs-Tourism/Literatura/reference.bib"
 fontsize: 12pt
 link-citations: yes
@@ -40,6 +40,7 @@ library(Quandl)
 library(stringr)
 library(eventstudies)
 library(stats)
+library(kableExtra)
         
 ```
 
@@ -85,26 +86,31 @@ gold <- gold[,5]
 
 options(scipen = 999,pillar.sigfigs=3)
 CrobexKonstr <- Quandl("ZAGREBSE/CROBEXKONSTRUKT", type = "raw",collapse = "daily",start_date = "2019-01-02", end_date = Sys.Date()) %>% 
+  arrange(Date) %>%
   mutate(CrobexKonstr = ((Value - lag(Value))/Value)*100) %>%
   drop_na() %>%
   select(-Value)
 
 CrobexInd <- Quandl("ZAGREBSE/CROBEXINDUSTRIJA", type = "raw",collapse = "daily",start_date = "2019-01-02", end_date = Sys.Date()) %>% 
+  arrange(Date) %>%
   mutate(CrobexInd = ((Value - lag(Value))/Value)*100) %>%
   drop_na() %>%
   select(-Value)
 
 CrobexNutr <- Quandl("ZAGREBSE/CROBEXNUTRIS", type = "raw",collapse = "daily",start_date = "2019-01-02", end_date = Sys.Date()) %>% 
+  arrange(Date) %>%
   mutate(CrobexNutr = ((Value - lag(Value))/Value)*100) %>%
   drop_na() %>%
   select(-Value)
 
 CrobexTur <- Quandl("ZAGREBSE/CROBEXTURIST", type = "raw",collapse = "daily",start_date = "2019-01-02", end_date = Sys.Date()) %>% 
+  arrange(Date) %>%
   mutate(CrobexTur = ((Value - lag(Value))/Value)*100) %>%
   drop_na() %>%
   select(-Value)
 
 CrobexTr <- Quandl("ZAGREBSE/CROBEXTR", type = "raw",collapse = "daily",start_date = "2019-01-02", end_date = Sys.Date()) %>% 
+  arrange(Date) %>%
   mutate(CrobexTr = ((Value - lag(Value))/Value)*100) %>%
   drop_na() %>%
   select(-Value)
@@ -144,17 +150,20 @@ TOURISMdta <- zoo(TOURISMdta[,-1], order.by = TOURISMdta$Date)
 
  market %>%
   mutate(dr = cut(Date, breaks = c(range(Date), 
-            as.Date(c("2020-02-12", "2020-04-08","2021-04-15"))), include.lowest=TRUE)) %>% 
+            as.Date(c("2020-02-12", "2020-04-08","2021-04-15"))), include.lowest=TRUE)) %>% #View()
   mutate(Pandemic =  case_when(
-    .$dr == "2019-01-02" ~ "Pre",
+    .$dr == "2019-01-03" ~ "Pre",
     .$dr == "2020-02-12" ~ "Ongoing",
-    .$dr == "2020-04-08" ~ "Post")) %>% 
-  slice(-c(1:2)) %>% 
-  select(-dr) %>%
-   group_by()
-  summarise(Return_avg =mean(Return),
-            Return_sd =sd(Return)) %>% 
-  mutate_if(is.numeric, round, 3)
+    .$dr == "2020-04-08" ~ "Post")) %>%  #
+  filter(Date < "2021-04-15") %>% 
+  select(-dr) %>% arrange (Date) %>%  #
+  group_by(Pandemic, Index) %>%
+  summarise(Return_sum = sum(Return),
+            Return_avg = mean(Return),  
+            Return_sd = sd(Return),
+            Return_min = min(Return),
+            Return_max = max(Return)) %>% 
+  mutate_if(is.numeric, round, 3) %>% kable()
 
 ```
 
