@@ -298,7 +298,13 @@ nonparametric_tests(list_of_returns = securities_returns,
 
 ## Visual presentation of results
 
+It  is  observed  that  the  cumulative  abnormal  return runs beyond the confidence interval after the time in the negative side, indicating that the market performed well before  the  Wuhan  lockdown,  however,  the  lockdown adversely affect the market, which is represented by the Caissa,  and  the  market  declined  sharply  and  achieve significant negative abnormal return.
 
+
+The blue line represent the companies’ return, and since is inside the abnormal area (doted lines) it shows the anormality of the series. However, the five days windw presents results equal zero, this mean that even if the event appears to cause disturbance in the series, it isn’t statistic significant.
+
+
+In this first example, raw stock market returns was utilised in the event study.  It is importantto emphasise that the event study is a statistically valid tool even under these circumstances. Averaging across multiple events isolates the event-related fluctuations.  However, there is aloss of statistical efficiency that comes from fluctuations of stock prices that can have nothingto  do  with  firm  level  news.   In  order  to  increase  efficiency,  we  resort  to  adjustment  of  thereturns data.
 ```{r vizNOexter, echo=FALSE, message=FALSE, warning=FALSE}
 SplitD <- data.frame(name=colnames(rates),
                      when = rep(as.Date("2020-02-24"),12))
