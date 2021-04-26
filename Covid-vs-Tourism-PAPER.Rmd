@@ -64,7 +64,6 @@ The SARS-CoV-2 virus pandemic has shaken the whole world and caused historically
 
  
 
-
 According to the historical review of data on tourist arrivals and overnight stays in Croatia (table 1), a constant growth in tourist arrivals and tourist overnight stays can be observed until 2020. If we compare the nights and arrivals in 2019 with those from 2010, it could be stated that the results have almost doubled. Despite the favorable results, a sharp decline followed in 2020 with decrease in tourist arrivals by 64.2% and decrease in overnight stays by 55.3% in commercial accommodation in 2020 compared to 2019 year. The decline in arrivals and overnight stays followed among domestic and foreign tourists, with the same being more pronounced among foreign tourists, which can also be seen from Charts 1 and 2. 
 
 Tu fali uvodni dio. 
@@ -215,20 +214,23 @@ add_indx <- get_rates_from_prices(gold,
 colnames(add_indx) <- "gold"
 ```
 
-## Methodology
 
-
-Data and Methodology 
+## Data and Methodology 
 
  
-
 This research paper will study the impact of variables related to the COVID 19 pandemic on the shares of the tourism sector listed on the Croatian capital market. The study used daily closing stock prices in order to calculate daily percentage returns. However, since the Croatian capital market has major liquidity problems out of a total of XX shares listed on the Croatian capital market, in this study was used XX shares according to the criterion of the number of trading days, which had to be greater than 100. 
-
- 
 
 Daily percentage changes of closing stock prices were calculated according to formula: 
 
-## Insigthts from the data and topic identification
+
+## Methodology
+
+
+This paper applies the event study methodology as described in @BWarner. This methodological approach is used to analyze stock markets reaction to the variety of possible events and in this study we are interested in the effect of COVID-19 pandemic  outbreak on the Tourist stocks in Croataia. In order to estimate the economic impact of the event on the stock market performance, event study methodology measurse the deviation of the listed stocks from their historical average and tests weather the influence is translated into abnormal. Under the efficient market hypothesis, the stock market returns reflect all available information and price adjustment to the announcement of new information follows immediately (@FamaETAL).
+
+The evidence of significant positive or negative abnormal returns is expected if the markets reaction to the event efficiently incorporates avaliable information. The analysis examines the Croatian stock market reaction to the announcement of first reported COVID-19 pandemic incidence in Italy. Since the pandemic was gaining momentum worldwide and it was  highly anticipated by investors that it will spread into the Europe, we set the event day one week prior to the fist officially reported case in Italy. The Abnormal returns ($AR$ ) for index i at day t is calculated as in equation (1):
+
+## Insights from the data and topic identification
 
  
 
