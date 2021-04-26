@@ -237,11 +237,26 @@ The evidence of significant positive or negative abnormal returns is expected if
 
 $AR_{i,t}= R_{i,t}-\bar{R_{i,t}}$
 
-The historical stock price average $\bar{R_{i,t}}$ is calculated over the period from from the first trading day of the 2019. until the event. The daily returns ($R_{i,t}$) are calculated according to the:
+where the historical stock price average, i.e. normal return, $\bar{R_{i,t}}$ is calculated over the period from from the first trading day of the 2019. until the event. The daily returns ($R_{i,t}$) are calculated according to the:
 
 $R_{i,t}=\frac{P_{i,t}-P_{i,t-1}}{P_{i,t-1}}$
  
- where $P_{i,t}$ represents the closing price of the stock *i* on the day *t*.  
+where $P_{i,t}$ represents the closing price of the stock *i* on the day *t*.  
+
+
+In the following step, cumulative abnormal returns during the event window are calculated acording to the following formula:
+
+$CAR_{\sqsubset t1,tn \sqsupset } = \sum_{t1}^{tn}AR_{i,t}$.
+
+Conditional on the estimated $\sigma_{\epsilon }^{2}$ according to the:
+
+$\widehat{\sigma_{\epsilon }^{2}}=\sum _{t\in D}\frac{(R_{t}-\widehat{R_{t}})^{2}}{D-2}$
+
+the null hypothesis that COVID-19 did not impact the Croatian tourist stocks can be rejected if the estimated value of CAR statistic lies outside the 95% confidence interval:
+
+$\sqsubset -1.96*\sqrt{2T}\sigma_{\epsilon},1.96*\sqrt{2T}\sigma_{\epsilon }\sqsupset$
+
+
 
 
 ## Insights from the data and topic identification
@@ -333,6 +348,11 @@ plot(es3)
 ```
 
 # CONCLUSION
+
+
+
+This analysis provides  empirical evidence on the direct reactions of ZSE listed tourist firm to the outbreak of COVID-19 global pandemic by application of the event stud methodology. The results confirm that COVID-19 pandemic has affected tourist stocks by triggering the negative above average cumulative return during the event period. Hovever, the pandemic effect seems not to be the the strongst in the tourist sector which might be due to the low liquidity of tourist stocks on the ZSE, structure of croatian economy and exclusion of croatian stock market from global financial trends. It would be useful to further examine the reasons for the unequal sectoral distribution of pandemic effects in the local and global markets.
+
 
 # BIBLIOGRAPHY
 
