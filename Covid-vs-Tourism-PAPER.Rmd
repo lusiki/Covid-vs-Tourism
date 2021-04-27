@@ -6,6 +6,7 @@ header-includes:
   - \usepackage{caption}
   - \captionsetup[figure]{labelformat=empty}
 output:
+  bookdown::word_document2: null 
   bookdown::tufte_html2:
     number_sections: no
     toc: yes
@@ -17,7 +18,6 @@ output:
     latex_engine: xelatex
     number_sections: true
     toc: no
-  bookdown::word_document2: null 
 bibliography: "D:/LUKA/Academic/Covid-vs-Tourism/Literatura/reference.bib"
 fontsize: 12pt
 link-citations: yes
@@ -73,8 +73,6 @@ According to the historical review of data on tourist arrivals and overnight sta
 Tu fali uvodni dio. 
 
 @Pany used a sample of 46 stocks listed in the Stock Exchange of Thailand in order to analyze stock price reactions during pandemic. After applying event study methodology in order to empirically measure abnormal returns and volatility, research results suggest that the majority of stocks in the Stock Exchange of Thailand have been negatively affected by Covid-19 pandemic. On the other side authors have also found that some stocks had positive returns, these stocks are included in commerce sector- companies which are included in distribution of pharmaceutical products and services. Irfan, Kassim and Dhimmar (2021) analyzed the impact of COVID-19 on the performance of Indian stock exchange and Indonesian Stock Exchange. Author included three different event windows because they wanted to check results in different time periods. The analysis of both countries showed opposite results since Indian stock market showed downward sloping after WHO declaration, and Indonesian upward. @Abul researched new COVID-19 official cases announcements and death ratio on the financial markets volatility index (VIX). Authors has concluded that new cases reported outside China has positive impact on VIX, death ratio has significant positive impact on VIX, and the spread of the COVID-19 increase financial volatility. Chia, Khim-Sen Liew and Rowland (2020) research the relation between Malaysian stock market and variables related to COVID-19 their results suggest that daily new cases had negative but insignificant impact on the indices returns. On the other hand authors also found that movement control order had significant and positive impact on all indices’ returns which is quite surprising.  
-
- 
 
 # METHODOLOGY
 
@@ -221,9 +219,7 @@ colnames(add_indx) <- "gold"
 
 ## DATA 
 
-
 The analysis examines the Croatian stock market reaction to the announcement of first reported COVID-19 pandemic incidence in Italy. Since the pandemic was gaining momentum worldwide and it was  highly anticipated by investors that it will spread into the Europe, we set the event day one week prior to the fist officially reported case in Italy.
-
 
 This research paper will study the impact of variables related to the COVID 19 pandemic on the shares of the tourism sector listed on the Croatian capital market. The study used daily closing stock prices in order to calculate daily percentage returns. However, since the Croatian capital market has major liquidity problems out of a total of XX shares listed on the Croatian capital market, in this study was used XX shares according to the criterion of the number of trading days, which had to be greater than 100. 
 
@@ -231,9 +227,42 @@ Daily percentage changes of closing stock prices were calculated according to fo
 
 ## MODEL
 
-This paper applies the event study methodology as described in @BWarner. This methodological approach is used to analyze stock markets reaction to the variety of possible events and in this study we are interested in the effect of COVID-19 pandemic  outbreak on the Tourist stocks in Croataia. In order to estimate the economic impact of the event on the stock market performance, event study methodology measurse the deviation of the listed stocks from their historical average and tests weather the influence is translated into abnormal. Under the efficient market hypothesis, the stock market returns reflect all available information and price adjustment to the announcement of new information follows immediately (@FamaETAL).
+This paper applies the event study methodology as described in @BWarner. This methodological approach is used to analyze stock markets reaction to the universe of possible events and in this study we are interested in the effect of COVID-19 pandemic outbreak on the tourist stocks listed on the Zagreb stock exchange. In order to estimate the economic impact of the event on the stock market performance, event study methodology measures the deviation of the stock`s retutrns from their historical average and tests weather the influence is translated into abnormal returns. Under the efficient market hypothesis, the stock market returns reflect all available information and price adjustment to the announcement of new information follows immediately (@FamaETAL).
 
-The evidence of significant positive or negative abnormal returns is expected if the markets reaction to the event efficiently incorporates avaliable information. The abnormal returns ($AR_{i,t}$) for the stock *i* at day *t* is calculated as:
+The evidence of significant positive or negative abnormal returns is expected if the markets reaction to the event efficiently incorporates avaliable information. 
+
+
+
+Expected stock market returns are estimated in the pre-event time period, according to the formula:
+
+$$R_{it}=E\left[R_{it}|I_{t}\right ]+e_{it}$$
+where $R_{it}$ is the return of the stock *i* in the period *t*, $I_{t}$ is the avaliable information set and $e_{it}$ is the unexpected return component. There are multiple expected return models in the literature like market model, capital asset pricing model, Fama-French factor model and Carhart  four factor model. In this analysis, the market model is applied with the following specification:
+
+$R_{it}=\alpha_{it}+\beta_{1i}R_{MKTt}+\epsilon_{it}$ 
+
+where $R_{MKT}$ represents the market portfolio return and in this particular empirical specification, Crobex index of ZSE is used to proxy general market. After the market model parameters are estimated, the expected returns during the event window are parametrised according to the specification:
+
+$E[R_{it}|X_{t}] =\alpha_{i}+\beta_{i}R_{it}$.
+
+The abnormal return $AR_{it}$ is defined as a difference between the actual and expected return during the event window:
+
+$AR_{it} = R_{it}-E[R_{it}|I_{t}]$.
+
+If AR systematically deviates from 0, this implies that the market misprices the event and implies a profitable arbitrage strategy. The cumulative abnormal return $CAR$ is a computed by aggregating abnormal returns:
+
+$CAAR_{(t1,t2)}=\sum_{t=t_{1}}^{t_{2}}AR_{t}$
+
+
+
+
+
+
+
+
+
+
+
+The abnormal returns ($AR_{i,t}$) for the stock *i* at day *t* is calculated as:
 
 $AR_{i,t}= R_{i,t}-\bar{R_{i,t}}$
 
@@ -255,8 +284,6 @@ $\widehat{\sigma_{\epsilon }^{2}}=\sum _{t\in D}\frac{(R_{t}-\widehat{R_{t}})^{2
 the null hypothesis that COVID-19 did not impact the Croatian tourist stocks can be rejected if the estimated value of CAR statistic lies outside the 95% confidence interval:
 
 $\sqsubset -1.96*\sqrt{2T}\sigma_{\epsilon},1.96*\sqrt{2T}\sigma_{\epsilon }\sqsupset$
-
-
 
 
 ## Insights from the data and topic identification
