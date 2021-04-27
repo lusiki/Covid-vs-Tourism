@@ -6,10 +6,10 @@ header-includes:
   - \usepackage{caption}
   - \captionsetup[figure]{labelformat=empty}
 output:
-  bookdown::word_document2: null 
   bookdown::tufte_html2:
     number_sections: no
     toc: yes
+  bookdown::word_document2: null 
   bookdown::pdf_document2:
     includes:
       before_body:
