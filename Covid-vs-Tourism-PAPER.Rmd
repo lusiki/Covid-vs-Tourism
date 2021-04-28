@@ -55,12 +55,10 @@ The coronavirus pandemic flooded the globe in just a few months after the first 
 According to the UNWTO, Croatia is among the 10 most vulnerable countries according to the criterion of the direct impact of tourism on the share of GDP. More precisely, in the first place is Macao (China) 48%, followed by: Fiji 13%, Jordan 12%, Spain 12% and Croatia with 11%. Many countries have introduced travel restrictions, and knowing that the share of foreign tourists in Croatia is 89% (UNWTO, 2021), negative results are expected from companies that are directly or indirectly involved in tourism. In Croatia tourism is taking part in a large share of total exports (35%) as well (UNWTO, 2021). Although Croatia achieved a record in 2019 in terms of the total number of arrivals and overnight stays of domestic and foreign tourists in 2020 due to the global corona pandemic, there was a steep decline compared to 2019, which amounts to -55,29% of overnight stays and -64,22% of total arrivals. Poor results in tourism spilled over into the capital market and caused turmoil, so the purpose of this research was to investigate how tourism stock prices respond to the event of the COVID-19 pandemic by using event study technique. This study contributes to the literature by analyzing the impact of global COVID-19 pandemic on tourism stock volatility in Croatia. Tu još nešto fali. The remainder of this study is structured as follows……… 
 
 
-
 # RESEARCH BACKGROUND 
 
 Tourist indicators of Croatian tourism before and during the Covid-19 pandemic 
 
- 
 The Republic of Croatia systematically follows modern tourist trends and is well positioned on the European tourist market. It is recognized as a stable, safe tourist destination, beautiful and rich natural and cultural-historical heritage. The Croatian tourism sector has been successful since Croatia's independence and accession to the European Union, and has consistently recorded enviable results, until the outbreak of the coronavirus pandemic in 2020. According to the data published on the official website of the World Health Organization–WHO, by April 20, 2021, a total of 141,754,944 confirmed cases of COVID-19 were recorded, of which 3,025,835 deaths. According to the data reported to the WHO, from 3 January 2020 to 20 April 2021, 310,306 confirmed COVID-19 cases with 6,643 deaths were recorded in Croatia on the total population of 4,058,165 
 
 The SARS-CoV-2 virus pandemic has shaken the whole world and caused historically unique problems in all aspects of social and economic life. It has greatly affected the global economic activities. Measures taken to prevent virus spreading (social distancing, traffic restrictions, restrictions on commercial activity, borders closures, etc.) have affected in particular the service sector, tourism and hospitality. The analysis of selected indicators of tourism development in Croatia before and at the time of Covid-19 pandemic in Croatia, shows how much the pandemic affected the results in tourism. 
@@ -216,78 +214,49 @@ add_indx <- get_rates_from_prices(gold,
 colnames(add_indx) <- "gold"
 ```
 
-
 ## DATA 
 
-The analysis examines the Croatian stock market reaction to the announcement of first reported COVID-19 pandemic incidence in Italy. Since the pandemic was gaining momentum worldwide and it was  highly anticipated by investors that it will spread into the Europe, we set the event day one week prior to the fist officially reported case in Italy.
-
-This research paper will study the impact of variables related to the COVID 19 pandemic on the shares of the tourism sector listed on the Croatian capital market. The study used daily closing stock prices in order to calculate daily percentage returns. However, since the Croatian capital market has major liquidity problems out of a total of XX shares listed on the Croatian capital market, in this study was used XX shares according to the criterion of the number of trading days, which had to be greater than 100. 
-
-Daily percentage changes of closing stock prices were calculated according to formula: 
+This research paper analyses the impact of the COVID 19 pandemic on the shares of the tourism sector listed on the Croatian capital market. The retrieved data sample consists of 23 traded tourist firms for the period between the first trading day in 2019. and April 13th 2021. Due to the low liquidity, i.e. infrequent trading, we reduce the empirical sample to 12 firms according to the criteria of minimum of 100 trading days over the sampled period. For these 12 firms we use daily closing stock prices in order to calculate daily percentage returns. Since the pandemic was gaining momentum worldwide and it was highly anticipated by investors that it will spread into the Europe, we devide the time period into three parts: pre epidemic part ranging from the first trading day in 2019. until one week before the first reported case in Italy (Feb, 21th 2020.), ongoing pandemic event from the first incidence in Italy until one week after the the lockdown was introduced in Croatia (March,19th 2020.) and after event period from March, 26th 2020 until the end of the time sample (April, 13th,2021). We specify the beginning of the event period one week before first COVID-19 incidence in Italy and end one week after the lockdown in Croatia to allow uncertainty and information to become incorporated in the market valuations. 
 
 ## MODEL
 
 This paper applies the event study methodology as described in @BWarner. This methodological approach is used to analyze stock markets reaction to the universe of possible events and in this study we are interested in the effect of COVID-19 pandemic outbreak on the tourist stocks listed on the Zagreb stock exchange. In order to estimate the economic impact of the event on the stock market performance, event study methodology measures the deviation of the stock`s retutrns from their historical average and tests weather the influence is translated into abnormal returns. Under the efficient market hypothesis, the stock market returns reflect all available information and price adjustment to the announcement of new information follows immediately (@FamaETAL).
 
-The evidence of significant positive or negative abnormal returns is expected if the markets reaction to the event efficiently incorporates avaliable information. 
+Stock market returns are estimated in the pre-event time period, according to the formula:
 
-
-
-Expected stock market returns are estimated in the pre-event time period, according to the formula:
-
-$$R_{it}=E\left[R_{it}|I_{t}\right ]+e_{it}$$
-where $R_{it}$ is the return of the stock *i* in the period *t*, $I_{t}$ is the avaliable information set and $e_{it}$ is the unexpected return component. There are multiple expected return models in the literature like market model, capital asset pricing model, Fama-French factor model and Carhart  four factor model. In this analysis, the market model is applied with the following specification:
-
-$R_{it}=\alpha_{it}+\beta_{1i}R_{MKTt}+\epsilon_{it}$ 
-
-where $R_{MKT}$ represents the market portfolio return and in this particular empirical specification, Crobex index of ZSE is used to proxy general market. After the market model parameters are estimated, the expected returns during the event window are parametrised according to the specification:
-
-$E[R_{it}|X_{t}] =\alpha_{i}+\beta_{i}R_{it}$.
-
-The abnormal return $AR_{it}$ is defined as a difference between the actual and expected return during the event window:
+$$R_{it}=\frac{P_{i,t}-P_{i,t-1}}{P_{i,t-1}}$$
+where $P_{it}$ is the price of the stock *i* in the period *t*. The abnormal return $AR_{it}$ is defined as a difference between the actual and expected return $E[R_{it}|I_{t}]$ during the event window:
 
 $AR_{it} = R_{it}-E[R_{it}|I_{t}]$.
 
-If AR systematically deviates from 0, this implies that the market misprices the event and implies a profitable arbitrage strategy. The cumulative abnormal return $CAR$ is a computed by aggregating abnormal returns:
+The expected returns during the event window are parametrised according to the OLS specification:
 
-$CAAR_{(t1,t2)}=\sum_{t=t_{1}}^{t_{2}}AR_{t}$
+$E[R_{it}|I_{t}] =\alpha_{it}+\beta_{it}R_{MKT_{it}} + \epsilon_{it}$
 
+where $R_{MKT_{it}}$ represents the return model such as market model, capital asset pricing model(@Mossin), Fama-French factor model(@FamaFrench) and Carhart four factor model(@Carhart). In this analysis, the market model is applied. The abnormal return $AR_{it}$ is defined as a difference between the actual and expected return during the event window:
 
+$AR_{it} = R_{it}-E[R_{it}|I_{t}]$ 
 
+or
 
+$AR_{it} = R_{it}-(\alpha_{it}+\beta_{it}R_{MKT_{it}})$
 
+where $\alpha_{it}$ and $\beta_{it}$ represent estimated parameters from the OLS model.
 
+If AR systematically deviates from 0, this implies that the market misprices the event and implies a profitable arbitrage strategy. The cumulative abnormal return $CAR$ is computed by aggregating abnormal returns:
 
+$CAR_{(t1,t2)}=\sum_{t=t_{1}}^{t_{2}}AR_{t}$.
 
+The null hypothesis of a zero cumulative abnormal return ($H_{0}:CAR_{it}=0$) is tested against the alternative of a nonzero CAR $H_{0}:CAR_{it}\neq0$ by *t* statistic obtained with the following procedure:
 
+$s_{AR_{i}}^{2}= \frac{1}{M_{i}-2}\sum_{t=t_{0}}^{t_{1}}e_{it}^{2}$
 
+$s_{CAR_{i}}^{2}= Ls_{AR_{i}}^{2}$
 
-The abnormal returns ($AR_{i,t}$) for the stock *i* at day *t* is calculated as:
-
-$AR_{i,t}= R_{i,t}-\bar{R_{i,t}}$
-
-where the historical stock price average, i.e. normal return, $\bar{R_{i,t}}$ is calculated over the period from from the first trading day of the 2019. until the event. The daily returns ($R_{i,t}$) are calculated according to the:
-
-$R_{i,t}=\frac{P_{i,t}-P_{i,t-1}}{P_{i,t-1}}$
- 
-where $P_{i,t}$ represents the closing price of the stock *i* on the day *t*.  
-
-
-In the following step, cumulative abnormal returns during the event window are calculated acording to the following formula:
-
-$CAR_{\sqsubset t1,tn \sqsupset } = \sum_{t1}^{tn}AR_{i,t}$.
-
-Conditional on the estimated $\sigma_{\epsilon }^{2}$ according to the:
-
-$\widehat{\sigma_{\epsilon }^{2}}=\sum _{t\in D}\frac{(R_{t}-\widehat{R_{t}})^{2}}{D-2}$
-
-the null hypothesis that COVID-19 did not impact the Croatian tourist stocks can be rejected if the estimated value of CAR statistic lies outside the 95% confidence interval:
-
-$\sqsubset -1.96*\sqrt{2T}\sigma_{\epsilon},1.96*\sqrt{2T}\sigma_{\epsilon }\sqsupset$
+$t(CAR)=\frac{CAR_{i}}{s_{CAR}}$
 
 
-## Insights from the data and topic identification
-
+where M is the length of the estimation window and L is the legnth of the respective event window.
 
 
 
@@ -307,9 +276,19 @@ securities_returns <- apply_market_model(
   estimation_end = as.Date("2020-01-23")
 )
 
+pt <- parametric_tests(list_of_returns = securities_returns,
+                 event_start = as.Date("2020-02-14"),
+                 event_end = as.Date("2020-03-26")) 
+
+
+pt
+
+
+
 parametric_tests(list_of_returns = securities_returns,
-                 event_start = as.Date("2020-02-24"),
-                 event_end = as.Date("2020-04-14"))
+                 event_start = as.Date("2020-02-16"),
+                 event_end = as.Date("2020-03-20"))
+
 ```
 
 
@@ -317,9 +296,11 @@ parametric_tests(list_of_returns = securities_returns,
 ## Parametric tests
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
-nonparametric_tests(list_of_returns = securities_returns,
+nt <- nonparametric_tests(list_of_returns = securities_returns,
                     event_start = as.Date("2020-02-24"),
                     event_end = as.Date("2020-04-14"))
+
+nt
 ```
 
 
