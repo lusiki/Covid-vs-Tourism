@@ -6,10 +6,10 @@ header-includes:
   - \usepackage{caption}
   - \captionsetup[figure]{labelformat=empty}
 output:
+  bookdown::word_document2: null 
   bookdown::tufte_html2:
     number_sections: no
     toc: yes
-  bookdown::word_document2: null 
   bookdown::pdf_document2:
     includes:
       before_body:
@@ -201,7 +201,7 @@ colnames(add_indx) <- "gold"
 
 This research paper analyses the impact of the COVID 19 pandemic on the shares of the tourism sector listed on the Croatian capital market. The retrieved data sample consists of 23 traded tourist firms for the period between the first trading day in 2019. and April 13th 2021. Due to the low liquidity, i.e. infrequent trading, we reduce the empirical sample to 12 firms according to the criteria of minimum of 100 trading days over the sampled period. For these 12 firms we use daily closing stock prices in order to calculate daily percentage returns. Since the pandemic was gaining momentum worldwide and it was highly anticipated by investors that it will spread into the Europe, we devide the time period into three parts: *pre* epidemic part ranging from the first trading day in 2019. until one week before the first reported case in Italy (Feb, 21th 2020.), *ongoing* pandemic event from the first incidence in Italy until one week after the the lockdown was introduced in Croatia (March,19th 2020.) and *post* event period from March, 26th 2020 until the end of the time sample (April, 13th,2021). We specify the beginning of the event period one week before first COVID-19 incidence in Italy and end one week after the lockdown in Croatia to allow uncertainty and information to become incorporated in the market valuations. 
 
-The overview of the Croatian capital market reaction to the COVID-19 pandemic spread in Europe is summarised in the Table 1. It can be seen that COVID-19 pandemic caused a significant drop in the overall market valuation (CrobexTr) of 25.9% and all sectoral indexes. The negative pandemic effect seems even more pronounced taken that since the beginning ot the analysed period the overall stock market trend was positive  The Crobex Nutrition index had the biggest drop (26.1%) followed by the Crobex Tourist index that lost 25.2% of the value
+The overview of the Croatian capital market reaction to the COVID-19 pandemic spread in Europe is summarised in the Table 1. It can be seen that COVID-19 pandemic caused a significant drop in the overall market valuation (CrobexTr) of 25.9% and all sectoral indexes. The Crobex Nutrition index had the biggest drop (26.1%) followed by the Crobex Tourist index that lost 25.2% of the value. The negative pandemic effect seems even more pronounced taken that since the beginning of the analyzed period the overall stock market trend was positive and gained 19% but with pronounced bad performance of the construction sector (CrobexKonstr). During the post event period, a significant market rebound can be observed and overall market valuation (CrobexTr) rose by 17.7%  followed by all sectoral indexes. The tourist sector had the worst performance relative to the other sectors in the pre event period (-0.4%) but reacted very similar to the overall market during the event period. The rebound of the tourist sector was only somewhat better than the market average but significantly smaller than other sectoral indexes like construction and food sector. It can also be seen that standard deviation of the tourist sector return remains lower than the average market during the event and in the post evend period. Furthermore, the standard deviation of the tourist sector return is lower relative to the other sectoral indexes in all periods indicating that the effect of the COVID-19 pandemic wasnt strongest for the tourist sector but rather very similar to the market average. It is also interesting to note that the market rebound after the event was stronger in industry and construction sectors than tourism sector.  
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
  market %>%
