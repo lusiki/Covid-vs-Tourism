@@ -161,25 +161,8 @@ TOURISMdta <- stockDF %>% select(Date = date, Close = last_price, url) %>%
 
 TOURISMdta <- zoo(TOURISMdta[,-1], order.by = TOURISMdta$Date)
 
-
- market %>%
-  mutate(dr = cut(Date, breaks = c(range(Date), 
-            as.Date(c("2020-02-12", "2020-04-08","2021-04-15"))), include.lowest=TRUE)) %>% #View()
-  mutate(Pandemic =  case_when(
-    .$dr == "2019-01-03" ~ "Pre",
-    .$dr == "2020-02-12" ~ "Ongoing",
-    .$dr == "2020-04-08" ~ "Post")) %>%  #
-  filter(Date < "2021-04-15") %>% 
-  select(-dr) %>% arrange (Date) %>%  #
-  group_by(Pandemic, Index) %>%
-  summarise(Return_sum = sum(Return),
-            Return_avg = mean(Return),  
-            Return_sd = sd(Return),
-            Return_min = min(Return),
-            Return_max = max(Return)) %>% 
-  mutate_if(is.numeric, round, 3) %>% kable()
-
 ```
+
 
 ```{r stockReturns, echo=FALSE, message=FALSE, warning=FALSE}
 rates <- get_rates_from_prices(TOURISMdta,
@@ -216,11 +199,33 @@ colnames(add_indx) <- "gold"
 
 ## DATA 
 
-This research paper analyses the impact of the COVID 19 pandemic on the shares of the tourism sector listed on the Croatian capital market. The retrieved data sample consists of 23 traded tourist firms for the period between the first trading day in 2019. and April 13th 2021. Due to the low liquidity, i.e. infrequent trading, we reduce the empirical sample to 12 firms according to the criteria of minimum of 100 trading days over the sampled period. For these 12 firms we use daily closing stock prices in order to calculate daily percentage returns. Since the pandemic was gaining momentum worldwide and it was highly anticipated by investors that it will spread into the Europe, we devide the time period into three parts: pre epidemic part ranging from the first trading day in 2019. until one week before the first reported case in Italy (Feb, 21th 2020.), ongoing pandemic event from the first incidence in Italy until one week after the the lockdown was introduced in Croatia (March,19th 2020.) and after event period from March, 26th 2020 until the end of the time sample (April, 13th,2021). We specify the beginning of the event period one week before first COVID-19 incidence in Italy and end one week after the lockdown in Croatia to allow uncertainty and information to become incorporated in the market valuations. 
+This research paper analyses the impact of the COVID 19 pandemic on the shares of the tourism sector listed on the Croatian capital market. The retrieved data sample consists of 23 traded tourist firms for the period between the first trading day in 2019. and April 13th 2021. Due to the low liquidity, i.e. infrequent trading, we reduce the empirical sample to 12 firms according to the criteria of minimum of 100 trading days over the sampled period. For these 12 firms we use daily closing stock prices in order to calculate daily percentage returns. Since the pandemic was gaining momentum worldwide and it was highly anticipated by investors that it will spread into the Europe, we devide the time period into three parts: *pre* epidemic part ranging from the first trading day in 2019. until one week before the first reported case in Italy (Feb, 21th 2020.), *ongoing* pandemic event from the first incidence in Italy until one week after the the lockdown was introduced in Croatia (March,19th 2020.) and *post* event period from March, 26th 2020 until the end of the time sample (April, 13th,2021). We specify the beginning of the event period one week before first COVID-19 incidence in Italy and end one week after the lockdown in Croatia to allow uncertainty and information to become incorporated in the market valuations. 
+
+The overview of the Croatian capital market reaction to the COVID-19 pandemic spread in Europe is summarised in the Table 1. It can be seen that COVID-19 pandemic caused a significant drop in the overall market valuation (CrobexTr) of 25.9% and all sectoral indexes. The negative pandemic effect seems even more pronounced taken that since the beginning ot the analysed period the overall stock market trend was positive  The Crobex Nutrition index had the biggest drop (26.1%) followed by the Crobex Tourist index that lost 25.2% of the value
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+ market %>%
+  mutate(dr = cut(Date, breaks = c(range(Date), 
+            as.Date(c("2020-02-12", "2020-04-08","2021-04-15"))), include.lowest=TRUE)) %>% #View()
+  mutate(Pandemic =  case_when(
+    .$dr == "2019-01-03" ~ "Pre",
+    .$dr == "2020-02-12" ~ "Ongoing",
+    .$dr == "2020-04-08" ~ "Post")) %>%  #
+  filter(Date < "2021-04-15") %>% 
+  select(-dr) %>% arrange (Date) %>%  #
+  group_by(Pandemic, Index) %>%
+  summarise(Return_sum = sum(Return),
+            Return_avg = mean(Return),  
+            Return_sd = sd(Return),
+            Return_min = min(Return),
+            Return_max = max(Return)) %>% 
+  mutate_if(is.numeric, round, 3) %>% kable(caption = "Table 1: Overview of the market reaction to COVID-19 pandemic")
+
+```
 
 ## MODEL
 
-This paper applies the event study methodology as described in @BWarner. This methodological approach is used to analyze stock markets reaction to the universe of possible events and in this study we are interested in the effect of COVID-19 pandemic outbreak on the tourist stocks listed on the Zagreb stock exchange. In order to estimate the economic impact of the event on the stock market performance, event study methodology measures the deviation of the stock`s retutrns from their historical average and tests weather the influence is translated into abnormal returns. Under the efficient market hypothesis, the stock market returns reflect all available information and price adjustment to the announcement of new information follows immediately (@FamaETAL).
+This paper applies the event study methodology as described in @BWarner. This methodological approach is used to analyze stock markets reaction to the universe of possible events and in this study we are interested in the effect of COVID-19 pandemic outbreak on the tourist stocks listed on the Zagreb stock exchange. In order to estimate the economic impact of the event on the stock market performance, event study methodology measures the deviation of the stock`s returns from their historical average and tests weather the influence is translated into abnormal returns. Under the efficient market hypothesis, the stock market returns reflect all available information and price adjustment to the announcement of new information follows immediately (@FamaETAL).
 
 Stock market returns are estimated in the pre-event time period, according to the formula:
 
@@ -257,7 +262,6 @@ $t(CAR)=\frac{CAR_{i}}{s_{CAR}}$
 
 
 where M is the length of the estimation window and L is the legnth of the respective event window.
-
 
 
 # RESULTS AND DISCUSSION
@@ -312,7 +316,8 @@ It  is  observed  that  the  cumulative  abnormal  return runs beyond the confid
 The blue line represent the companies’ return, and since is inside the abnormal area (doted lines) it shows the anormality of the series. However, the five days windw presents results equal zero, this mean that even if the event appears to cause disturbance in the series, it isn’t statistic significant.
 
 
-In this first example, raw stock market returns was utilised in the event study.  It is importantto emphasise that the event study is a statistically valid tool even under these circumstances. Averaging across multiple events isolates the event-related fluctuations.  However, there is aloss of statistical efficiency that comes from fluctuations of stock prices that can have nothingto  do  with  firm  level  news.   In  order  to  increase  efficiency,  we  resort  to  adjustment  of  thereturns data.
+In this first example, raw stock market returns was utilised in the event study.  It is importantto emphasise that the event study is a statistically valid tool even under these circumstances. Averaging across multiple events isolates the event-related fluctuations.  However, there is aloss of statistical efficiency that comes from fluctuations of stock prices that can have nothingto  do  with  firm  level  news.   In  order  to  increase  efficiency,  we  resort  to  adjustment  of  the returns data.
+
 ```{r vizNOexter, echo=FALSE, message=FALSE, warning=FALSE}
 SplitD <- data.frame(name=colnames(rates),
                      when = rep(as.Date("2020-02-24"),12))
