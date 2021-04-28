@@ -6,10 +6,10 @@ header-includes:
   - \usepackage{caption}
   - \captionsetup[figure]{labelformat=empty}
 output:
-  bookdown::word_document2: null 
   bookdown::tufte_html2:
     number_sections: no
     toc: yes
+  bookdown::word_document2: null 
   bookdown::pdf_document2:
     includes:
       before_body:
@@ -229,7 +229,8 @@ This paper applies the event study methodology as described in @BWarner. This me
 
 Stock market returns are estimated in the pre-event time period, according to the formula:
 
-$$R_{it}=\frac{P_{i,t}-P_{i,t-1}}{P_{i,t-1}}$$
+$R_{it}=\frac{P_{i,t}-P_{i,t-1}}{P_{i,t-1}}$
+
 where $P_{it}$ is the price of the stock *i* in the period *t*. The abnormal return $AR_{it}$ is defined as a difference between the actual and expected return $E[R_{it}|I_{t}]$ during the event window:
 
 $AR_{it} = R_{it}-E[R_{it}|I_{t}]$.
@@ -266,8 +267,7 @@ where M is the length of the estimation window and L is the legnth of the respec
 
 # RESULTS AND DISCUSSION
 
-
-## Nonparametric tests
+As previously noted, we define the event in broad terms of COVID-19 pandemic transitioning from global shock to taking measurable effect in Europe. We proxy the event effect with first reported case in Italy on Feb, 21th but allow one week prior to the event for information to get incorporated in the market valuations. The reason for taking one week before the actual first reported case is because investors were already aware of the ongoing pandemic and the virus was already spreading in Italy before the official announcement. In a similar fashion, we end the event period three trading days after the official lockdown was introduced in Croatia on March 19th to allow investors to process the information and adjust the market valuation accordingly. The results of the several nonparametric event study tests are presented in the Table 2. The table shows clusters of hig significance across different tests on the first trading day after the lockdown was introduced in Italy (Feb 24th) as well as the following day (Feb 25th) but with somewhat lower robustness. Clusters of signiciance across different tests is observed around March 11th when World Health Organisation declared COVID-19 a global pandemic pointing to the significant effect on the listed tourist firms on Zagreb Stock Exhange. It is also noticable that robustly siginficant COVID-19 effects can be observed on March 9th, 12th, 16th, and 17th pointing to the investor`s anticipation of official declarations.  
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 securities_returns <- apply_market_model(
@@ -277,34 +277,36 @@ securities_returns <- apply_market_model(
   market_model = "sim",
   estimation_method = "ols",
   estimation_start = as.Date("2019-01-01"),
-  estimation_end = as.Date("2020-01-23")
+  estimation_end = as.Date("2020-02-15")
 )
 
 pt <- parametric_tests(list_of_returns = securities_returns,
-                 event_start = as.Date("2020-02-14"),
-                 event_end = as.Date("2020-03-26")) 
-
-
-pt
-
-
-
-parametric_tests(list_of_returns = securities_returns,
                  event_start = as.Date("2020-02-16"),
-                 event_end = as.Date("2020-03-20"))
+                 event_end = as.Date("2020-03-23")) 
+
+options(digits = 3)
+pt <- pt[,c(-2,-3,-4)]
+colnames(pt) <- c("Date", "BW80","sig","BW85","sig","t-stat","sig","pt","sig","BH","sig","LMB","sig")
+kable(pt,caption = "Table 2: The event study reuslts for the parametric tests")
+
 
 ```
 
 
+To check the robustness of the results, we also run severeal nonparametric tests and show results in Table 3. Nonparametric tests show overall less significance but point in the same direction. First significance cluster can be observed on Feb 20th, a one day before the first officialy reported case in Italy and another cluster is related to March 11th, a day when WHO declared global pandemic. Also, cluster of significance across tests is   
 
-## Parametric tests
+
+
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 nt <- nonparametric_tests(list_of_returns = securities_returns,
-                    event_start = as.Date("2020-02-24"),
-                    event_end = as.Date("2020-04-14"))
+                    event_start = as.Date("2020-02-16"),
+                    event_end = as.Date("2020-03-23"))
 
-nt
+options(digits = 3)
+nt <- nt[,c(-2,-3)]
+colnames(nt) <- c("Date", "SIGN","sig","GSIGN","sig","CSIGN","sig","RANK","sig","MRANK","sig","WLCX","sig")
+kable(nt,caption = "Table 2: The event study reuslts for the nonparametric tests")
 ```
 
 
