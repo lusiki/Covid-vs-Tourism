@@ -24,7 +24,6 @@ link-citations: yes
 ---
 
 ```{r library, warning=FALSE, include=FALSE, message=FALSE}
-
 library(estudy2)
 library(plotly)
 library(TSstudio)
@@ -41,7 +40,7 @@ library(stringr)
 library(eventstudies)
 library(stats)
 library(kableExtra)
-        
+library(patchwork)
 ```
 
 
@@ -163,7 +162,6 @@ TOURISMdta <- zoo(TOURISMdta[,-1], order.by = TOURISMdta$Date)
 
 ```
 
-
 ```{r stockReturns, echo=FALSE, message=FALSE, warning=FALSE}
 rates <- get_rates_from_prices(TOURISMdta,
                                quote = "Close",
@@ -261,9 +259,7 @@ $s_{CAR_{i}}^{2}= Ls_{AR_{i}}^{2}$
 
 $t(CAR)=\frac{CAR_{i}}{s_{CAR}}$
 
-
 where M is the length of the estimation window and L is the legnth of the respective event window.
-
 
 # RESULTS AND DISCUSSION
 
@@ -292,11 +288,7 @@ kable(pt,caption = "Table 2: The event study reuslts for the parametric tests")
 
 ```
 
-
-To check the robustness of the results, we also run severeal nonparametric tests and show results in Table 3. Nonparametric tests show overall less significance but point in the same direction. First significance cluster can be observed on Feb 20th, a one day before the first officialy reported case in Italy and another cluster is related to March 11th, a day when WHO declared global pandemic. Also, cluster of significance across tests is   
-
-
-
+To check the robustness of the results, we also run several nonparametric tests and show results in Table 3. Nonparametric tests generally show less significance but point in the same direction. First significance cluster can be observed on Feb 20th, a one day before the first officially reported case in Italy and another cluster is related to March 11th, a day when WHO declared global pandemic. Also, cluster of significance across tests is observed on the March 17th and could be related to the anticipation of the introduction of lockdown in the Croatia on March 19th.
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 nt <- nonparametric_tests(list_of_returns = securities_returns,
@@ -310,7 +302,6 @@ kable(nt,caption = "Table 2: The event study reuslts for the nonparametric tests
 ```
 
 
-## Visual presentation of results
 
 It  is  observed  that  the  cumulative  abnormal  return runs beyond the confidence interval after the time in the negative side, indicating that the market performed well before  the  Wuhan  lockdown,  however,  the  lockdown adversely affect the market, which is represented by the Caissa,  and  the  market  declined  sharply  and  achieve significant negative abnormal return.
 
@@ -322,26 +313,89 @@ In this first example, raw stock market returns was utilised in the event study.
 
 ```{r vizNOexter, echo=FALSE, message=FALSE, warning=FALSE}
 SplitD <- data.frame(name=colnames(rates),
-                     when = rep(as.Date("2020-02-24"),12))
+                     when = rep(as.Date("2020-02-21"),12))
 
 Returns <- na.omit(rates)
 
-es <- eventstudy(firm.returns = Returns,
+es1 <- eventstudy(firm.returns = Returns,
                  event.list = SplitD,
-                 event.window = 40,
+                 event.window = 5,
                  type = "None",
                  to.remap = TRUE,
                  remap = "cumsum",
                  inference = TRUE,
                  inference.strategy = "bootstrap")
 
-plot(es)
+
+result1 <- as.data.frame(es1$result) %>% 
+  mutate(EventDate = seq(-4,5,1)) %>% 
+  rename(ci1 = "2.5%",ci2 = "97.5%")
+
+gg1 <- ggplot(result1,aes(x = EventDate)) +
+  geom_line(aes(y=Mean,)) +
+  geom_line(aes(y=ci1), linetype="twodash") + 
+  geom_line(aes(y=ci2), linetype="twodash") +
+  geom_vline(xintercept=0) +
+  geom_hline(yintercept = 0) + 
+  scale_y_continuous(name="Cum change in response series %") +
+  scale_x_continuous(name ="Event Day",labels=c("-4", "-2", "0", "2","4")) +
+  theme_bw() +
+  ggtitle("")
+
+
 ```
 
-```{r vizCROBEXexter, echo=FALSE, message=FALSE, warning=FALSE}
+```{r vizNOexter1, echo=FALSE, message=FALSE, warning=FALSE}
+SplitD <- data.frame(name=colnames(rates),
+                     when = rep(as.Date("2020-03-11"),12))
+
+Returns <- na.omit(rates)
+
+
 es2 <- eventstudy(firm.returns = Returns,
                  event.list = SplitD,
-                 event.window = 40,
+                 event.window = 5,
+                 type = "None",
+                 to.remap = TRUE,
+                 remap = "cumsum",
+                 inference = TRUE,
+                 inference.strategy = "bootstrap")
+
+result2 <- as.data.frame(es2$result) %>% 
+  mutate(EventDate = seq(-4,5,1)) %>% 
+  rename(ci1 = "2.5%",ci2 = "97.5%")
+
+gg2 <- ggplot(result2,aes(x = EventDate)) +
+  geom_line(aes(y=Mean,)) +
+  geom_line(aes(y=ci1), linetype="twodash") + 
+  geom_line(aes(y=ci2), linetype="twodash") +
+  geom_vline(xintercept=0) +
+#  geom_hline(yintercept = 0) + 
+  scale_y_continuous(name="Cum change in response series %") +
+  scale_x_continuous(name ="Event Day",labels=c("-4", "-2", "0", "2","4")) +
+  theme_bw() +
+  ggtitle("")
+
+
+
+
+gg1+gg2
+
+
+```
+
+
+
+
+```{r vizCROBEXexter, echo=FALSE, message=FALSE, warning=FALSE}
+
+SplitD <- data.frame(name=colnames(rates),
+                     when = rep(as.Date("2020-02-21"),12))
+
+
+es3 <- eventstudy(firm.returns = Returns,
+                 event.list = SplitD,
+                 event.window = 5,
                  type = "marketModel",
                  to.remap = TRUE,
                  remap = "cumsum",
@@ -349,13 +403,64 @@ es2 <- eventstudy(firm.returns = Returns,
                  inference.strategy = "bootstrap",
                  model.args = list(market.returns=rates_indx$Crobex))
 
-plot(es2)
+result3 <- as.data.frame(es3$result) %>% 
+  mutate(EventDate = seq(-4,5,1)) %>% 
+  rename(ci1 = "2.5%",ci2 = "97.5%")
+
+gg3 <- ggplot(result3,aes(x = EventDate)) +
+  geom_line(aes(y=Mean,)) +
+  geom_line(aes(y=ci1), linetype="twodash") + 
+  geom_line(aes(y=ci2), linetype="twodash") +
+  geom_vline(xintercept=0) +
+  geom_hline(yintercept = 0) + 
+  scale_y_continuous(name="Cum change in response series %") +
+  scale_x_continuous(name ="Event Day",labels=c("-4", "-2", "0", "2","4")) +
+  theme_bw() +
+  ggtitle("")
+
 ```
 
-```{r vizGOLDexter, echo=FALSE, message=FALSE, warning=FALSE}
+
+```{r vizCROBEXexter2, echo=FALSE, message=FALSE, warning=FALSE}
+
+SplitDn <- data.frame(name=colnames(rates),
+                     when = rep(as.Date("2020-03-11"),12))
+
+
+es4 <- eventstudy(firm.returns = Returns,
+                 event.list = SplitDn,
+                 event.window = 5,
+                 type = "marketModel",
+                 to.remap = TRUE,
+                 remap = "cumsum",
+                 inference = TRUE,
+                 inference.strategy = "bootstrap",
+                 model.args = list(market.returns=rates_indx$Crobex))
+
+result4 <- as.data.frame(es4$result) %>% 
+  mutate(EventDate = seq(-4,5,1)) %>% 
+  rename(ci1 = "2.5%",ci2 = "97.5%")
+
+gg4 <- ggplot(result4,aes(x = EventDate)) +
+  geom_line(aes(y=Mean,)) +
+  geom_line(aes(y=ci1), linetype="twodash") + 
+  geom_line(aes(y=ci2), linetype="twodash") +
+  geom_vline(xintercept=0) +
+  geom_hline(yintercept = 0) + 
+  scale_y_continuous(name="Cum change in response series %") +
+  scale_x_continuous(name ="Event Day",labels=c("-4", "-2", "0", "2","4")) +
+  theme_bw() +
+  ggtitle("")
+
+gg3 + gg4
+
+```
+
+
+```{r vizGOLDexter,eval=FALSE, echo=FALSE, message=FALSE, warning=FALSE}
 es3 <- eventstudy(firm.returns = Returns,
                   event.list = SplitD,
-                  event.window = 40,
+                  event.window = 5,
                   type = "marketModel",
                   to.remap = TRUE,
                   remap = "cumsum",
