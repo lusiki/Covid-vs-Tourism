@@ -46,6 +46,7 @@ library(patchwork)
 
 ## ABSTRACT
 
+This paper
 
 # INTRODUCTION
 
@@ -302,14 +303,7 @@ kable(nt,caption = "Table 2: The event study reuslts for the nonparametric tests
 ```
 
 
-
-It  is  observed  that  the  cumulative  abnormal  return runs beyond the confidence interval after the time in the negative side, indicating that the market performed well before  the  Wuhan  lockdown,  however,  the  lockdown adversely affect the market, which is represented by the Caissa,  and  the  market  declined  sharply  and  achieve significant negative abnormal return.
-
-
-The blue line represent the companies’ return, and since is inside the abnormal area (doted lines) it shows the anormality of the series. However, the five days windw presents results equal zero, this mean that even if the event appears to cause disturbance in the series, it isn’t statistic significant.
-
-
-In this first example, raw stock market returns was utilised in the event study.  It is importantto emphasise that the event study is a statistically valid tool even under these circumstances. Averaging across multiple events isolates the event-related fluctuations.  However, there is aloss of statistical efficiency that comes from fluctuations of stock prices that can have nothingto  do  with  firm  level  news.   In  order  to  increase  efficiency,  we  resort  to  adjustment  of  the returns data.
+We additionally examine cummulative change in the return series graphically for two events, the first COVID-19 incidence in Italy and WHO declaration of COVID-19 a global pandemc, that have been characterized by clustering of significance across multiple parametric and nonparametric tests. Here we specify event window to be shorter (10 days). The Graph 1 shows the results when no control variables are included in the model and Graph 2 is related to the extended model with Crobex index returns as a control variable. The left panel shows the results for the first COVID-19 incidence in Italy and the right panel is related to the WHO declaration of global pandemc. In every case we are not able to reject the null hypothesis of the abnormality of returns since the full line, representing the stock returns, is inside 95% confidence intervals represented by dotted lines
 
 ```{r vizNOexter, echo=FALSE, message=FALSE, warning=FALSE}
 SplitD <- data.frame(name=colnames(rates),
@@ -384,9 +378,6 @@ gg1+gg2
 
 ```
 
-
-
-
 ```{r vizCROBEXexter, echo=FALSE, message=FALSE, warning=FALSE}
 
 SplitD <- data.frame(name=colnames(rates),
@@ -419,7 +410,6 @@ gg3 <- ggplot(result3,aes(x = EventDate)) +
   ggtitle("")
 
 ```
-
 
 ```{r vizCROBEXexter2, echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -456,7 +446,6 @@ gg3 + gg4
 
 ```
 
-
 ```{r vizGOLDexter,eval=FALSE, echo=FALSE, message=FALSE, warning=FALSE}
 es3 <- eventstudy(firm.returns = Returns,
                   event.list = SplitD,
@@ -473,11 +462,14 @@ es3 <- eventstudy(firm.returns = Returns,
 plot(es3)
 ```
 
+Overall, the results point to the significant negative effect of COVID-19 pandemic on the returns of tourist stocks listed on the ZSE. When the event winow is defined in broader terms we observe clusters of signicfiance across variety of tests around two events, the first official incidence of COVID-19 in Italy and WHO declaration of global pandemic. This result points to the importance of international and global events for trends on the Croatian capital market. This result is robustly confirmed with the rage of parametric and nonparametric tests. Furthermore, this finding is coroborated with shorter event window specification and robust to inclusion of external variable controling for the overall market return. The descriptive statistics point to the effect of COVID-19 on the tourist stocks in the comparable size to the general market and also very similar to the other sectors. Therefore we conlude that COVID-19 pandemic had a similer market wide effect and no particular sectoral effect is present. It is also interesting to note that international events potentially cary higher importance for the local stock market trends than local epidemiological policy. This result implies a high level of international capital integration for the ZSE.
+
+
 # CONCLUSION
 
 
 
-This analysis provides  empirical evidence on the direct reactions of ZSE listed tourist firm to the outbreak of COVID-19 global pandemic by application of the event stud methodology. The results confirm that COVID-19 pandemic has affected tourist stocks by triggering the negative above average cumulative return during the event period. Hovever, the pandemic effect seems not to be the the strongst in the tourist sector which might be due to the low liquidity of tourist stocks on the ZSE, structure of croatian economy and exclusion of croatian stock market from global financial trends. It would be useful to further examine the reasons for the unequal sectoral distribution of pandemic effects in the local and global markets.
+This analysis provides empirical evidence on the direct reactions of ZSE listed tourist firm to the outbreak of COVID-19 global pandemic by application of the event study methodology. The results confirm that COVID-19 pandemic has affected tourist stocks by triggering the negative above average cumulative return during the event period. The findings are robust to the different length of event window and controlling for the general market returns. Interestingly, the pandemic effects seem to be similar in size across different sectors and tourist sector is no exception to this rule. This result might be due to the low liquidity of tourist stocks on the ZSE or structure of croatian economy and financial market but this would be an interesting area for future research. exclusion of croatian stock market from global financial trends. It would be useful to further examine the reasons for the unequal sectoral distribution of pandemic effects in the local and global markets.
 
 
 # BIBLIOGRAPHY
