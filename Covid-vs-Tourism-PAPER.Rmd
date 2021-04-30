@@ -6,7 +6,6 @@ header-includes:
   - \usepackage{caption}
   - \captionsetup[figure]{labelformat=empty}
 output:
-  bookdown::word_document2: null 
   bookdown::tufte_html2:
     number_sections: no
     toc: yes
@@ -18,6 +17,7 @@ output:
     latex_engine: xelatex
     number_sections: true
     toc: no
+  bookdown::word_document2: null 
 bibliography: "D:/LUKA/Academic/Covid-vs-Tourism/Literatura/reference.bib"
 fontsize: 12pt
 link-citations: yes
@@ -46,7 +46,10 @@ library(patchwork)
 
 ## ABSTRACT
 
-This paper analyses the effect of COVID-19 pandemic on the listed tourist stocks in the Zagreb stock exchange by application of the event study methodology. The analysis starts with the descriptive overview of the market wide performance of different sectors in the period before, during and after the initial pandemic outbreak and afterwards explicitly tests for the COVID-19 outbreak effects on the tourist stocks. First, the wide COVID-19 outbreak event window of 35 days is specified so that important events related to the pandemic can be identified. Second, the first officially reported COVID-19 incidence in Italy and World Health Organization declaration of global pandemic are used as identified events in a shorter 10 day event study window estimation. The results point to the significant negative effect of COVID-19 pandemic on the returns of tourist stocks in the Zagreb stock exchange and are robust to the different event window specification.  The overall results do not provide evidence to the relatively stronger COVID-19 effects on tourist sector but rather equal effects across different sectors.
+This paper analyses the effect of COVID-19 pandemic on the listed tourist stocks in the Zagreb stock exchange by application of the event study methodology. The analysis starts with the descriptive overview of the market wide performance of different sectors in the period before, during and after the initial pandemic outbreak and afterwards explicitly tests for the COVID-19 outbreak effects on the tourist stocks. First, the wide COVID-19 outbreak event window of 35 days is specified so that important events related to the pandemic can be identified. Second, the first officially reported COVID-19 incidence in Italy and World Health Organization declaration of global pandemic are used as identified events in a shorter 10 day window event study estimation. The results point to the significant negative effect of COVID-19 pandemic on the returns of tourist stocks in the Zagreb stock exchange and are robust to the different event window specification.  However, the overall results do not provide evidence to the relatively stronger COVID-19 effects on tourist sector but rather equal effects across different sectors.
+
+
+We investigate the effect of the spread of the pandemic into Europe on the tourist stocks in Croata!
 
 # INTRODUCTION
 
@@ -198,9 +201,9 @@ colnames(add_indx) <- "gold"
 
 ## DATA 
 
-This research paper analyses the impact of the COVID 19 pandemic on the shares of the tourism sector listed on the Croatian capital market. The retrieved data sample consists of 23 traded tourist firms for the period between the first trading day in 2019. and April 13th 2021. Due to the low liquidity, i.e. infrequent trading, we reduce the empirical sample to 12 firms according to the criteria of minimum of 100 trading days over the sampled period. For these 12 firms we use daily closing stock prices in order to calculate daily percentage returns. Since the pandemic was gaining momentum worldwide and it was highly anticipated by investors that it will spread into the Europe, we devide the time period into three parts: *pre* epidemic part ranging from the first trading day in 2019. until one week before the first reported case in Italy (Feb, 21th 2020.), *ongoing* pandemic event from the first incidence in Italy until one week after the the lockdown was introduced in Croatia (March,19th 2020.) and *post* event period from March, 26th 2020 until the end of the time sample (April, 13th,2021). We specify the beginning of the event period one week before first COVID-19 incidence in Italy and end one week after the lockdown in Croatia to allow uncertainty and information to become incorporated in the market valuations. 
+This analysis uses data sample of 23 traded tourist firms retrieved from the Zagreb stock exchange (ZSE) in the period between the first trading day in 2019. and April 13th 2021. Due to the low liquidity, i.e. infrequent trading, the initial sample is reduced to the final empirical sample of 12 firms according to the criteria of minimum of 100 trading days over the sampled period. For these 12 firms the daily closing stock prices are used in order to calculate daily percentage returns. Since the COVID-19 pandemic was gaining worldwide momentum prior to the spreading into the Europe, we divide the time period into three parts: *pre* epidemic part ranging from the first trading day in 2019. until one week before the first reported case in Italy (Feb, 21th 2020.), *ongoing* pandemic from the first offically reported COVID-19 incidence in Italy until one week after the the lockdown was introduced in Croatia (March,19th 2020.) and *post* event period from March, 26th 2020 until the end of the sample period (April, 13th,2021). The reason to specify the event period loosely, a one week before first COVID-19 incidence in Italy and one week after the lockdown in Croatia, is to allow uncertainty and information to become incorporated in the market valuations due to the novelty of the pandemic shock and media reporting lag related to the pandemic outbreak. 
 
-The overview of the Croatian capital market reaction to the COVID-19 pandemic spread in Europe is summarised in the Table 1. It can be seen that COVID-19 pandemic caused a significant drop in the overall market valuation (CrobexTr) of 25.9% and all sectoral indexes. The Crobex Nutrition index had the biggest drop (26.1%) followed by the Crobex Tourist index that lost 25.2% of the value. The negative pandemic effect seems even more pronounced taken that since the beginning of the analyzed period the overall stock market trend was positive and gained 19% but with pronounced bad performance of the construction sector (CrobexKonstr). During the post event period, a significant market rebound can be observed and overall market valuation (CrobexTr) rose by 17.7%  followed by all sectoral indexes. The tourist sector had the worst performance relative to the other sectors in the pre event period (-0.4%) but reacted very similar to the overall market during the event period. The rebound of the tourist sector was only somewhat better than the market average but significantly smaller than other sectoral indexes like construction and food sector. It can also be seen that standard deviation of the tourist sector return remains lower than the average market during the event and in the post evend period. Furthermore, the standard deviation of the tourist sector return is lower relative to the other sectoral indexes in all periods indicating that the effect of the COVID-19 pandemic wasnt strongest for the tourist sector but rather very similar to the market average. It is also interesting to note that the market rebound after the event was stronger in industry and construction sectors than tourism sector.  
+The overview of the Croatian capital market reaction to the COVID-19 pandemic spread in Europe is summarised in the Table 1. It can be seen that COVID-19 pandemic caused a significant drop in the overall market valuation (CrobexTr) of 25.9% and all sectoral indexes. The Crobex Nutrition index had the biggest relative drop (26.1%), followed by the Crobex Tourist index that lost 25.2% of the value. The negative pandemic effect seems even more pronounced since from the beginning of the analyzed period the overall stock market trend was positive and gained 19%. The worst performing sector in that period was the construction (CrobexKonstr) that lost 31% of the value. During the post event period, a significant overall market rebound can be observed as CrobexTr index rose by 17.7%  followed by posive performance of all sectors. The tourist sector had the worst performance relative to the other sectors in the pre event period (-0.4%) but reacted very similar to the overall market during the event period. The rebound of the tourist sector was only by a margin better than the market average but significantly smaller than other sectors like construction and food sector. It is interesting to note that the standard deviation of the tourist sector return remains lower than the average market during the event and in the post event period, implying a lower investment risk. Furthermore, the standard deviation of the tourist sector return is lower relative to the other sectors in all periods indicating that the effect of the COVID-19 pandemic wasnt the strongest for the tourist sector but rather very similar to the market average. It is also important to note that the market rebound after the event was stronger in industry and construction than tourist sector.  
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
  market %>%
@@ -213,18 +216,18 @@ The overview of the Croatian capital market reaction to the COVID-19 pandemic sp
   filter(Date < "2021-04-15") %>% 
   select(-dr) %>% arrange (Date) %>%  #
   group_by(Pandemic, Index) %>%
-  summarise(Return_sum = sum(Return),
-            Return_avg = mean(Return),  
-            Return_sd = sd(Return),
-            Return_min = min(Return),
-            Return_max = max(Return)) %>% 
-  mutate_if(is.numeric, round, 3) %>% kable(caption = "Table 1: Overview of the market reaction to COVID-19 pandemic")
+  summarise(Total = sum(Return),
+            Average = mean(Return),  
+            Stdev = sd(Return),
+            Min = min(Return),
+            Max = max(Return)) %>% 
+  mutate_if(is.numeric, round, 3) %>% kable(caption = "Table 1: Overview of the market returns over the analysed period")
 
 ```
 
 ## MODEL
 
-This paper applies the event study methodology as described in @BWarner. This methodological approach is used to analyze stock markets reaction to the universe of possible events and in this study we are interested in the effect of COVID-19 pandemic outbreak on the tourist stocks listed on the Zagreb stock exchange. In order to estimate the economic impact of the event on the stock market performance, event study methodology measures the deviation of the stock`s returns from their historical average and tests weather the influence is translated into abnormal returns. Under the efficient market hypothesis, the stock market returns reflect all available information and price adjustment to the announcement of new information follows immediately (@FamaETAL).
+This paper applies the event study methodology as described in @BWarner. This methodological approach is used to analyze stock markets reaction to the universe of possible events in general and this study applies it in the case of COVID-19 pandemic outbreak on the tourist stocks listed on the ZSE . In order to estimate the economic impact of the event on the stock market performance, event study methodology measures the deviation of the stock`s returns from their historical average and tests weather the influence is translated into abnormal returns. Under the efficient market hypothesis, the stock market returns reflect all available information and price adjustment to the announcement of new information follows immediately (@FamaETAL).
 
 Stock market returns are estimated in the pre-event time period, according to the formula:
 
@@ -234,21 +237,21 @@ where $P_{it}$ is the price of the stock *i* in the period *t*. The abnormal ret
 
 $AR_{it} = R_{it}-E[R_{it}|I_{t}]$.
 
-The expected returns during the event window are parametrised according to the OLS specification:
+The expected returns during the event window are parametrized according to the OLS specification:
 
 $E[R_{it}|I_{t}] =\alpha_{it}+\beta_{it}R_{MKT_{it}} + \epsilon_{it}$
 
-where $R_{MKT_{it}}$ represents the return model such as market model, capital asset pricing model(@Mossin), Fama-French factor model(@FamaFrench) and Carhart four factor model(@Carhart). In this analysis, the market model is applied. The abnormal return $AR_{it}$ is defined as a difference between the actual and expected return during the event window:
+where $R_{MKT_{it}}$ represents the return model of choice such as market model, capital asset pricing model(@Mossin), Fama-French factor model(@FamaFrench) and Carhart four factor model(@Carhart). In this analysis, the market model is applied. The abnormal return $AR_{it}$ is defined as a difference between the actual and expected return during the event window:
 
 $AR_{it} = R_{it}-E[R_{it}|I_{t}]$ 
 
-or
+or differently:
 
 $AR_{it} = R_{it}-(\alpha_{it}+\beta_{it}R_{MKT_{it}})$
 
-where $\alpha_{it}$ and $\beta_{it}$ represent estimated parameters from the OLS model.
+where $\alpha_{it}$ and $\beta_{it}$ represent estimated parameters from the ordinary least squares model.
 
-If AR systematically deviates from 0, this implies that the market misprices the event and implies a profitable arbitrage strategy. The cumulative abnormal return $CAR$ is computed by aggregating abnormal returns:
+Systematialy deviations of $AR_{it}$ from 0 implies that the market mispricing of the event and offers a profitable arbitrage strategy. The cumulative abnormal return $CAR$ is computed by aggregating abnormal returns:
 
 $CAR_{(t1,t2)}=\sum_{t=t_{1}}^{t_{2}}AR_{t}$.
 
@@ -260,11 +263,11 @@ $s_{CAR_{i}}^{2}= Ls_{AR_{i}}^{2}$
 
 $t(CAR)=\frac{CAR_{i}}{s_{CAR}}$
 
-where M is the length of the estimation window and L is the legnth of the respective event window.
+where M is the length of the estimation window and L is the legnth of the respective event window. Other tests (parametric and nonparameric)...
 
 # RESULTS AND DISCUSSION
 
-As previously noted, we define the event in broad terms of COVID-19 pandemic transitioning from global shock to taking measurable effect in Europe. We proxy the event effect with first reported case in Italy on Feb, 21th but allow one week prior to the event for information to get incorporated in the market valuations. The reason for taking one week before the actual first reported case is because investors were already aware of the ongoing pandemic and the virus was already spreading in Italy before the official announcement. In a similar fashion, we end the event period three trading days after the official lockdown was introduced in Croatia on March 19th to allow investors to process the information and adjust the market valuation accordingly. The results of the several nonparametric event study tests are presented in the Table 2. The table shows clusters of hig significance across different tests on the first trading day after the lockdown was introduced in Italy (Feb 24th) as well as the following day (Feb 25th) but with somewhat lower robustness. Clusters of signiciance across different tests is observed around March 11th when World Health Organisation declared COVID-19 a global pandemic pointing to the significant effect on the listed tourist firms on Zagreb Stock Exhange. It is also noticable that robustly siginficant COVID-19 effects can be observed on March 9th, 12th, 16th, and 17th pointing to the investor`s anticipation of official declarations.  
+In this analysis we broadly define the event in terms of COVID-19 pandemic transitioning from global shock to taking measurable effect in Europe. To proxy the event effect, the first reported case in Italy on Feb, 21th is chosen and extended one week prior to the event to allow for the information to get incorporated in the market valuations. The reason for extending the period is because investors were already aware of the ongoing pandemic and the virus was already spreading in Italy before the official announcement. In a similar fashion, the end of the event period is extended for three trading days after the official lockdown was introduced in Croatia on March 19th to allow investors to process the information and adjust the market valuation accordingly. For the given period, the results of the several nonparametric event study tests are presented in the Table 2. The table shows clusters of high significance across different tests on the first trading day after the lockdown was introduced in Italy (Feb 24th) as well as the following day (Feb 25th) but with somewhat lower robustness. Clusters of significance across different tests is also observed around March 11th when World Health Organization declared COVID-19 a global pandemic pointing to the significant effect on the listed tourist firms on ZSE. It is also noticeable that robustly significant COVID-19 effects can be observed on March 9th, 12th, 16th, and 17th pointing to the investor`s anticipation of official declarations in the local market, i.e. Croatia.  
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 securities_returns <- apply_market_model(
@@ -289,7 +292,7 @@ kable(pt,caption = "Table 2: The event study reuslts for the parametric tests")
 
 ```
 
-To check the robustness of the results, we also run several nonparametric tests and show results in Table 3. Nonparametric tests generally show less significance but point in the same direction. First significance cluster can be observed on Feb 20th, a one day before the first officially reported case in Italy and another cluster is related to March 11th, a day when WHO declared global pandemic. Also, cluster of significance across tests is observed on the March 17th and could be related to the anticipation of the introduction of lockdown in the Croatia on March 19th.
+To check the robustness of the results, several nonparametric tests are additionaly run and results are shown in the Table 3. Nonparametric tests show overall less significance relative to the parametric tests but point in the same direction. First significance cluster can be observed on Feb 20th, a one day before the first officially reported case in Italy and another cluster is related to March 11th, a day when WHO declared global pandemic. Also, cluster of significance across tests is observed on the March 17th and could be related to the investor`s anticipation of the introduction of lockdown in the Croatia on March 19th.
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 nt <- nonparametric_tests(list_of_returns = securities_returns,
@@ -303,7 +306,7 @@ kable(nt,caption = "Table 2: The event study reuslts for the nonparametric tests
 ```
 
 
-We additionally examine cummulative change in the return series graphically for two events, the first COVID-19 incidence in Italy and WHO declaration of COVID-19 a global pandemc, that have been characterized by clustering of significance across multiple parametric and nonparametric tests. Here we specify event window to be shorter (10 days). The Graph 1 shows the results when no control variables are included in the model and Graph 2 is related to the extended model with Crobex index returns as a control variable. The left panel shows the results for the first COVID-19 incidence in Italy and the right panel is related to the WHO declaration of global pandemc. In every case we are not able to reject the null hypothesis of the abnormality of returns since the full line, representing the stock returns, is inside 95% confidence intervals represented by dotted lines
+Cummulative change in the return series are additionally examined for two events, the first COVID-19 incidence in Italy and WHO declaration of COVID-19 a global pandemc, that have been characterized by clustering of significance across multiple parametric and nonparametric tests. In this case the  event window to be shorter (10 days). The Graph 1 shows the results when no control variables are included in the model and Graph 2 is related to the extended model with Crobex index returns as a control variable. The left panel shows the results for the first COVID-19 incidence in Italy and the right panel is related to the WHO declaration of global pandemc. In every case we are not able to reject the null hypothesis of the abnormality of returns since the full line, representing the stock returns, is inside 95% confidence intervals represented by dotted lines
 
 ```{r vizNOexter, echo=FALSE, message=FALSE, warning=FALSE}
 SplitD <- data.frame(name=colnames(rates),
