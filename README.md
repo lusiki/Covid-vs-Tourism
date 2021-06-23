@@ -24,5 +24,6 @@ Findings – COVID-19 undoubtedly had a significant impact on Croatia, which is 
 
 Contribution - This research offers a novel comprehensive review of the literature in the research topic and provides insights into local sectoral effects of the global financial shock caused by COVID-19 pandemic. Since this pandemic is increasing the market volatility, this research will be of importance to fund managers and carries implications for economic policy in terms of sectoral stimulus distribution and debt refinancing. The outcomes of this research will help policymakers to ensure sustainability of tourism companies and to overcome future crisis.
 
-The paper is avaliable on the [link](https://raw.githack.com/lusiki/Covid-vs-Tourism/main/Covid-vs-Tourism-PAPER.html)
+You can see the [presentation](https://raw.githack.com/lusiki/Covid-vs-Tourism/main/Presentation/Presentation.html) and the [paper](https://raw.githack.com/lusiki/Covid-vs-Tourism/main/Covid-vs-Tourism-PAPER.html).
+
 

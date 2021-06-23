@@ -1,6 +1,6 @@
 ---
 title: "The effect of COVID-19 pandemic on Croatian tourist sector"
-author: "Bogdan,S.,Sikic,L.and Baresa,S."
+author: "Bogdan,S., Sikic,L. and Baresa,S."
 date: "Tourism in Southern and Eastern Europe,6th International Scientific Conference"
 output:
   xaringan::moon_reader:
@@ -16,7 +16,7 @@ output:
   html_document:
     df_print: paged
   pdf_document: default
-subtitle: Faculty of Tourism and Hospitality Management, Uni Rijeka
+subtitle: Faculty of Tourism and Hospitality Management, Rijeka
 ---
 
 
@@ -148,8 +148,13 @@ name: dtamet
 
 # Event study methodology
 
+Stock market returns are estimated in the pre-event time period, according to the formula:
 
+$R_{it}=\frac{P_{i,t}-P_{i,t-1}}{P_{i,t-1}}$
 
+where $P_{it}$ is the price of the stock *i* in the period *t*. The abnormal return $AR_{it}$ is defined as a difference between the actual and expected return $E[R_{it}|I_{t}]$ during the event window:
+
+$AR_{it} = R_{it}-E[R_{it}|I_{t}]$.
 
 
 
@@ -386,6 +391,8 @@ kable(nt,caption = "Table 2: The event study reuslts for the nonparametric tests
 
 
 # First COVID-19 incidence in Italy
+
+
 ```{r vizNOexter, echo=FALSE, message=FALSE, warning=FALSE}
 SplitD <- data.frame(name=colnames(rates),
                      when = rep(as.Date("2020-02-21"),12))
@@ -551,7 +558,19 @@ es3 <- eventstudy(firm.returns = Returns,
 plot(es3)
 ```
 
+---
 
+# Summary of findings
+
+- Negative effect of COVID-19 on tourist sector
+
+- Similar market wide effects of COVDID-19 pandemic
+
+- Important events are:
+1. The first COVID-19 incidence in Italy
+2. Local announcement of lockdown
+
+- How do you explain relative performance of tourist stocks? 
 
 ---
 
