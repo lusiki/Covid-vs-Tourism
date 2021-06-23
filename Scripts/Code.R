@@ -1,4 +1,3 @@
-
 ##############################
 ##UTJECAJ COVID19 NA TURIZAM##
 ##############################
@@ -26,7 +25,7 @@ library(tseries)
 # PODACI----
 
 
-Quandl.api_key("jvwknzKzNdiuqGPCyXcT")
+source("./Secret/Passkey.R")
 CrobexTur <- Quandl("ZAGREBSE/CROBEXTURIST",type = "xts",collapse = "daily",start_date = "2019-01-01", end_date = Sys.Date())
 Crobex <- Quandl("ZAGREBSE/CROBEX", type = "xts",collapse = "daily",start_date = "2019-01-01", end_date = Sys.Date())
 oil <- Quandl("OPEC/ORB",type = "xts",collapse = "daily",start_date = "2019-01-01", end_date = Sys.Date())
@@ -130,9 +129,9 @@ COVIDturDF <- fortify(COVIDtur)
 dfMelted <- melt(COVIDturDF, id.vars="Index")
 
 
-  
+
 COVIDturDF %>% 
-# select(Index:gold) %>%
+  # select(Index:gold) %>%
   melt(., id.vars = "Index") %>%
   group_by(variable) %>% 
   mutate(log = log(value),
@@ -259,12 +258,3 @@ plot(reg, which = 1)
 plot(reg, which = 2)
 plot(reg, which = 3)
 plot(reg, which = 4)
-
-
-
-
-
-
-
-
-
