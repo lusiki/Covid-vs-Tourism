@@ -433,7 +433,7 @@ colnames(add_indx) <- "gold"
             Min = min(Return),
             Max = max(Return)) %>% 
   mutate_if(is.numeric, round, 3) %>% kable(caption = "") %>%
-  kable_styling(font_size = 10)
+  kable_styling(font_size = 12)
 
 ```
 ]
