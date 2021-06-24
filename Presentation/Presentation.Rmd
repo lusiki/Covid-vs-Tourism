@@ -81,7 +81,9 @@ library(patchwork)
 
 1. [COVID-19, economy and tourism](#econ)
 <br>
+<br>
 2. [Data and Event Study metodology](#dtamet)
+<br>
 <br>
 3. [Effect of COVID-19 on tourist stocks in Croatia](#effect)
 
