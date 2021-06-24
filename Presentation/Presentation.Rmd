@@ -116,8 +116,8 @@ name: econ
 <br>
 - Sectoral effects (check: [1](https://www.ilo.org/global/topics/coronavirus/sectoral/lang--en/index.htm),
 [2](https://www.consilium.europa.eu/media/48767/eg-note-sectoral-impact_fin.pdf),
-[3][1]
-[1]:https://www.europarl.europa.eu/RegData/etudes/STUD/2021/662903/IPOL_STU(2021)662903_EN.pdf)
+[3][1])
+[1]:https://www.europarl.europa.eu/RegData/etudes/STUD/2021/662903/IPOL_STU(2021)662903_EN.pdf
 <br>
 <br>
 - Impact of COVID-19 pandemic on SEE (check: [1](https://wiiw.ac.at/brave-new-world-the-economic-and-political-challenges-facing-eastern-europe-after-covid-19-e-517.html),
@@ -130,10 +130,11 @@ name: econ
 <br>
 <br>
 
-- [Jobs, exports, GDP, social consequences](https://www.unwto.org/tourism-and-covid-19-unprecedented-economic-impacts),
-- [3](https://www.sciencedirect.com/science/article/pii/S2666518221000206),
-- [4](https://mpra.ub.uni-muenchen.de/107784/1/MPRA_paper_107784.pdf)
-
+- [Jobs, exports, GDP, social consequences](https://www.unwto.org/tourism-and-covid-19-unprecedented-economic-impacts)
+<br>
+- [Multiplicative effects of tourism, for the economy and other sectors](https://www.sciencedirect.com/science/article/pii/S2666518221000206)
+<br>
+- Financial effects
 
 ---
 class: inverse, center, middle
@@ -147,57 +148,12 @@ name: dtamet
 
 ---
 
-# General market (CROBEX)
+# Setoral effects
 <br>
 <br>
 
-```{r, echo=FALSE, fig.height=5}
-knitr::include_url("https://zse.hr/en/indeks-366/365?isin=HRZB00ICBEX6")
-```
----
-
-# CROBEXindustry
-<br>
-<br>
-```{r, echo=FALSE}
-knitr::include_url("https://zse.hr/en/indeks-366/365?isin=HRZB00ICBEI7")
-```
-
----
-
-# CROBEXconstruct
-<br>
-<br>
-```{r, echo=FALSE}
-knitr::include_url("https://zse.hr/en/indeks-366/365?isin=HRZB00ICBEK3")
-```
-
----
-
-# CROBEXnutris
-<br>
-<br>
-```{r, echo=FALSE}
-knitr::include_url("https://zse.hr/en/indeks-366/365?isin=HRZB00ICBEN7")
-```
-
----
-
-# CROBEXtransport
-<br>
-<br>
-```{r, echo=FALSE}
-knitr::include_url("https://zse.hr/en/indeks-366/365?isin=HRZB00ICBET4")
-```
-
----
-
-# CROBEXtourist
-<br>
-<br>
-<br>
-```{r, echo=FALSE}
-knitr::include_url("https://zse.hr/en/indeks-366/365?isin=HRZB00ICBTU0")
+```{r, echo=FALSE, fig.height=7}
+knitr::include_url("https://zse.hr/en/indices/38")
 ```
 
 ---
