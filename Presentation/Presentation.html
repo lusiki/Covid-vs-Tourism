@@ -23,6 +23,7 @@ class: center, middle, inverse, title-slide
 
 
 &lt;style type="text/css"&gt;
+
 @media print {
   .has-continuation {
     display: block !important;
@@ -41,11 +42,10 @@ remark-slide-content {
 .mid. remark-code { /*Change made here*/
   font-size: 60% !important;
 }
-.tiny .remark-code { /*Change made here*/
+.tiny. remark-code { /*Change made here*/
   font-size: 40% !important;
 }
 &lt;/style&gt;
-
 
 
 
@@ -98,8 +98,6 @@ name: econ
 - Impact of COVID-19 pandemic on SEE (check: [1](https://wiiw.ac.at/brave-new-world-the-economic-and-political-challenges-facing-eastern-europe-after-covid-19-e-517.html),
 [2](https://wiiw.ac.at/in-it-together-the-economic-recovery-from-covid-19-in-central-europe-n-483.html),
 [3](https://wiiw.ac.at/contours-of-a-post-covid-economy-n-445.html))
-
-
 
 ---
 
@@ -170,27 +168,168 @@ name: dtamet
 # Tourist stocks in Croatia
 
 
+.tiny[
+
+```r
+kable(tribble(
+ ~No.,  ~Ticker, ~Name,
+1, "ARNT", "Arena Hospitality Group d.d.",
+2, "HEFA", "HELIOS FAROS d.d.",
+3, "HHLD", "HOTELI HALUDOVO MALINSKA d.d.",
+4, "HIMR", "Imperial Riviera d.d.",
+5, "HJDR",	"HOTELI JADRAN d.d.",
+6, "HPDG",		"MEDORA HOTELI I LJETOVALIŠTA d.d.",
+7, "HTPK",		"HTP KORČULA d.d.",
+8, "HTPO",		"HTP OREBIĆ d.d.",
+9, "HZVG",		"HOTELI ŽIVOGOŠĆE d.d.",
+10,"ILRA",		"ILIRIJA d.d.",
+11,"JDRN",		"JADRAN d.d.",
+12,"JLSA",		"JELSA d.d.",
+13,"LRH",		"LIBURNIA RIVIERA HOTELI d.d.",
+14,"LRHC",		"FTB TURIZAM d.d.",
+15,"MAIS",		"MAISTRA d.d.",
+16,"MDSP",	  "MODRA ŠPILJA d.d.",
+17,"PLAG",		"PLAVA LAGUNA d.d.",
+18,"PLAG2",	"PLAVA LAGUNA d.d.",
+19,"RIVP",		"Valamar Riviera d.d.",
+20,"SLRS",		"SOLARIS d.d.",
+21,"SUKC",		"SUNCE HOTELI d.d.",
+22,"TUHO",		"TURISTHOTEL d.d.",
+23,"VIS",		"VIS, d.d."
+))
 ```
-## # A tibble: 23 x 3
-##      No. Ticker Name                             
-##    &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;                            
-##  1     1 ARNT   Arena Hospitality Group d.d.     
-##  2     2 HEFA   HELIOS FAROS d.d.                
-##  3     3 HHLD   HOTELI HALUDOVO MALINSKA d.d.    
-##  4     4 HIMR   Imperial Riviera d.d.            
-##  5     5 HJDR   HOTELI JADRAN d.d.               
-##  6     6 HPDG   MEDORA HOTELI I LJETOVALIŠTA d.d.
-##  7     7 HTPK   HTP KORČULA d.d.                 
-##  8     8 HTPO   HTP OREBIĆ d.d.                  
-##  9     9 HZVG   HOTELI ŽIVOGOŠĆE d.d.            
-## 10    10 ILRA   ILIRIJA d.d.                     
-## # ... with 13 more rows
-```
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:right;"&gt; No. &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Ticker &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Name &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; ARNT &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Arena Hospitality Group d.d. &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; HEFA &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; HELIOS FAROS d.d. &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; HHLD &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; HOTELI HALUDOVO MALINSKA d.d. &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; HIMR &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Imperial Riviera d.d. &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; HJDR &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; HOTELI JADRAN d.d. &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 6 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; HPDG &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; MEDORA HOTELI I LJETOVALIŠTA d.d. &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 7 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; HTPK &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; HTP KORČULA d.d. &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 8 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; HTPO &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; HTP OREBIĆ d.d. &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 9 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; HZVG &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; HOTELI ŽIVOGOŠĆE d.d. &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 10 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; ILRA &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; ILIRIJA d.d. &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 11 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; JDRN &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; JADRAN d.d. &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 12 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; JLSA &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; JELSA d.d. &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 13 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; LRH &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; LIBURNIA RIVIERA HOTELI d.d. &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 14 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; LRHC &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FTB TURIZAM d.d. &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 15 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; MAIS &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; MAISTRA d.d. &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 16 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; MDSP &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; MODRA ŠPILJA d.d. &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 17 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; PLAG &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; PLAVA LAGUNA d.d. &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 18 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; PLAG2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; PLAVA LAGUNA d.d. &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 19 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; RIVP &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Valamar Riviera d.d. &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 20 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; SLRS &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; SOLARIS d.d. &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 21 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; SUKC &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; SUNCE HOTELI d.d. &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 22 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; TUHO &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; TURISTHOTEL d.d. &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 23 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; VIS &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; VIS, d.d. &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+]
 
 
 
-
-.[footnote [*] Check the [paper](https://www.researchgate.net/publication/309300600_Tourism_Sector_on_the_Zagreb_Stock_Exchange_ZSE_What_is_the_Value_of_Croatian_Tourism) on the valuation of Croatian tourist stocks.]
+.[footnote [*]Check the [paper](https://www.researchgate.net/publication/309300600_Tourism_Sector_on_the_Zagreb_Stock_Exchange_ZSE_What_is_the_Value_of_Croatian_Tourism) on the valuation of Croatian tourist stocks.]
 ---
 
 # Event study methodology
@@ -383,6 +522,7 @@ name: dtamet
 &lt;/tbody&gt;
 &lt;/table&gt;
 
+.tiny[
 &lt;table&gt;
 &lt;caption&gt;Table 2: The event study reuslts for the parametric tests&lt;/caption&gt;
  &lt;thead&gt;
@@ -795,13 +935,13 @@ name: dtamet
   &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
-
+]
 
 ---
 
 # Parametric tests
 
-
+.tiny[
 &lt;table&gt;
 &lt;caption&gt;Table 2: The event study reuslts for the parametric tests&lt;/caption&gt;
  &lt;thead&gt;
@@ -1214,13 +1354,13 @@ name: dtamet
   &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
-
+]
 
 ---
 
 # Non-parametric tests
 
-
+.tiny[
 &lt;table&gt;
 &lt;caption&gt;Table 2: The event study reuslts for the nonparametric tests&lt;/caption&gt;
  &lt;thead&gt;
@@ -1633,7 +1773,7 @@ name: dtamet
   &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
-
+]
 
 
 ---

@@ -32,6 +32,7 @@ opts_chunk$set(
 ```
 
 ```{css, echo = F, eval = T}
+
 @media print {
   .has-continuation {
     display: block !important;
@@ -50,7 +51,7 @@ remark-slide-content {
 .mid. remark-code { /*Change made here*/
   font-size: 60% !important;
 }
-.tiny .remark-code { /*Change made here*/
+.tiny. remark-code { /*Change made here*/
   font-size: 40% !important;
 }
 ```
@@ -75,7 +76,6 @@ library(stats)
 library(kableExtra)
 library(patchwork)
 ```
-
 
 
 # Overview
@@ -127,8 +127,6 @@ name: econ
 [2](https://wiiw.ac.at/in-it-together-the-economic-recovery-from-covid-19-in-central-europe-n-483.html),
 [3](https://wiiw.ac.at/contours-of-a-post-covid-economy-n-445.html))
 
-
-
 ---
 
 # COVID-19 and tourism
@@ -156,7 +154,7 @@ name: dtamet
 <br>
 <br>
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, fig.height=5}
 knitr::include_url("https://zse.hr/en/indeks-366/365?isin=HRZB00ICBEX6")
 ```
 ---
@@ -209,8 +207,10 @@ knitr::include_url("https://zse.hr/en/indeks-366/365?isin=HRZB00ICBTU0")
 
 # Tourist stocks in Croatia
 
+
+.tiny[
 ```{r, echo=FALSE}
-tribble(
+kable(tribble(
  ~No.,  ~Ticker, ~Name,
 1, "ARNT", "Arena Hospitality Group d.d.",
 2, "HEFA", "HELIOS FAROS d.d.",
@@ -235,14 +235,13 @@ tribble(
 21,"SUKC",		"SUNCE HOTELI d.d.",
 22,"TUHO",		"TURISTHOTEL d.d.",
 23,"VIS",		"VIS, d.d."
-
-)
+))
 ```
+]
 
 
 
-
-.[footnote [*] Check the [paper](https://www.researchgate.net/publication/309300600_Tourism_Sector_on_the_Zagreb_Stock_Exchange_ZSE_What_is_the_Value_of_Croatian_Tourism) on the valuation of Croatian tourist stocks.]
+.[footnote [*]Check the [paper](https://www.researchgate.net/publication/309300600_Tourism_Sector_on_the_Zagreb_Stock_Exchange_ZSE_What_is_the_Value_of_Croatian_Tourism) on the valuation of Croatian tourist stocks.]
 ---
 
 # Event study methodology
@@ -415,6 +414,7 @@ colnames(add_indx) <- "gold"
 
 ```
 
+.tiny[
 ```{r sectoralEffect, echo=FALSE, message=FALSE, warning=FALSE}
 securities_returns <- apply_market_model(
   rates = rates,
@@ -437,13 +437,13 @@ kable(pt,caption = "Table 2: The event study reuslts for the parametric tests")
 
 
 ```
-
+]
 
 ---
 
 # Parametric tests
 
-
+.tiny[
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 securities_returns <- apply_market_model(
   rates = rates,
@@ -466,13 +466,13 @@ kable(pt,caption = "Table 2: The event study reuslts for the parametric tests")
 
 
 ```
-
+]
 
 ---
 
 # Non-parametric tests
 
-
+.tiny[
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 nt <- nonparametric_tests(list_of_returns = securities_returns,
                     event_start = as.Date("2020-02-16"),
@@ -483,7 +483,7 @@ nt <- nt[,c(-2,-3)]
 colnames(nt) <- c("Date", "SIGN","sig","GSIGN","sig","CSIGN","sig","RANK","sig","MRANK","sig","WLCX","sig")
 kable(nt,caption = "Table 2: The event study reuslts for the nonparametric tests")
 ```
-
+]
 
 
 ---
