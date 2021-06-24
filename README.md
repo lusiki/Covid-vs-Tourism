@@ -1,9 +1,8 @@
 <br>
-<br>
 
 
 # Covid-vs-Tourism
-The impact of COVID-19 pandemic on tourism share prices in Croatia
+This is a *OpenSource* project that analyses impact of COVID-19 pandemic on tourism share prices in Croatia. 
 
 <p align="center">
   <img src="./Foto/COVIDvsTOURISM.jpg" width="750" title="hover text">
