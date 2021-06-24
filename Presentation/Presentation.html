@@ -169,36 +169,6 @@ name: dtamet
 
 
 .tiny[
-
-```r
-kable(tribble(
- ~No.,  ~Ticker, ~Name,
-1, "ARNT", "Arena Hospitality Group d.d.",
-2, "HEFA", "HELIOS FAROS d.d.",
-3, "HHLD", "HOTELI HALUDOVO MALINSKA d.d.",
-4, "HIMR", "Imperial Riviera d.d.",
-5, "HJDR",	"HOTELI JADRAN d.d.",
-6, "HPDG",		"MEDORA HOTELI I LJETOVALIŠTA d.d.",
-7, "HTPK",		"HTP KORČULA d.d.",
-8, "HTPO",		"HTP OREBIĆ d.d.",
-9, "HZVG",		"HOTELI ŽIVOGOŠĆE d.d.",
-10,"ILRA",		"ILIRIJA d.d.",
-11,"JDRN",		"JADRAN d.d.",
-12,"JLSA",		"JELSA d.d.",
-13,"LRH",		"LIBURNIA RIVIERA HOTELI d.d.",
-14,"LRHC",		"FTB TURIZAM d.d.",
-15,"MAIS",		"MAISTRA d.d.",
-16,"MDSP",	  "MODRA ŠPILJA d.d.",
-17,"PLAG",		"PLAVA LAGUNA d.d.",
-18,"PLAG2",	"PLAVA LAGUNA d.d.",
-19,"RIVP",		"Valamar Riviera d.d.",
-20,"SLRS",		"SOLARIS d.d.",
-21,"SUKC",		"SUNCE HOTELI d.d.",
-22,"TUHO",		"TURISTHOTEL d.d.",
-23,"VIS",		"VIS, d.d."
-))
-```
-
 &lt;table&gt;
  &lt;thead&gt;
   &lt;tr&gt;
@@ -334,16 +304,35 @@ kable(tribble(
 
 # Event study methodology
 
-Stock market returns are estimated in the pre-event time period, according to the formula:
+- Stock market returns
 
 `\(R_{it}=\frac{P_{i,t}-P_{i,t-1}}{P_{i,t-1}}\)`
 
-where `\(P_{it}\)` is the price of the stock *i* in the period *t*. The abnormal return `\(AR_{it}\)` is defined as a difference between the actual and expected return `\(E[R_{it}|I_{t}]\)` during the event window:
+- Abnormal return 
 
 `\(AR_{it} = R_{it}-E[R_{it}|I_{t}]\)`.
 
+- Expected returns
+
+`\(E[R_{it}|I_{t}] =\alpha_{it}+\beta_{it}R_{MKT_{it}} + \epsilon_{it}\)`
+
+- Abnormal return defined differently
+
+`\(AR_{it} = R_{it}-(\alpha_{it}+\beta_{it}R_{MKT_{it}})\)`
 
 
+---
+
+# Event study methodology
+
+- Cumulative abnormal return
+
+`\(CAR_{(t1,t2)}=\sum_{t=t_{1}}^{t_{2}}AR_{t}\)`
+
+- Statistical hypothesis of CAR
+
+`\(H_{0}:CAR_{it}=0\)`
+`\(H_{1}:CAR_{it}\neq0\)`
 
 ---
 class: inverse, center, middle
@@ -1778,9 +1767,9 @@ name: dtamet
 
 ---
 
-
 # First COVID-19 incidence in Italy
-
+&lt;br&gt;
+&lt;br&gt;
 
 
 
@@ -1791,8 +1780,8 @@ name: dtamet
 ---
 
 # Local lockdown announcement
-
-
+&lt;br&gt;
+&lt;br&gt;
 
 
 

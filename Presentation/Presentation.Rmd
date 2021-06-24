@@ -246,16 +246,35 @@ kable(tribble(
 
 # Event study methodology
 
-Stock market returns are estimated in the pre-event time period, according to the formula:
+- Stock market returns
 
 $R_{it}=\frac{P_{i,t}-P_{i,t-1}}{P_{i,t-1}}$
 
-where $P_{it}$ is the price of the stock *i* in the period *t*. The abnormal return $AR_{it}$ is defined as a difference between the actual and expected return $E[R_{it}|I_{t}]$ during the event window:
+- Abnormal return 
 
 $AR_{it} = R_{it}-E[R_{it}|I_{t}]$.
 
+- Expected returns
+
+$E[R_{it}|I_{t}] =\alpha_{it}+\beta_{it}R_{MKT_{it}} + \epsilon_{it}$
+
+- Abnormal return defined differently
+
+$AR_{it} = R_{it}-(\alpha_{it}+\beta_{it}R_{MKT_{it}})$
 
 
+---
+
+# Event study methodology
+
+- Cumulative abnormal return
+
+$CAR_{(t1,t2)}=\sum_{t=t_{1}}^{t_{2}}AR_{t}$
+
+- Statistical hypothesis of CAR
+
+$H_{0}:CAR_{it}=0$
+$H_{1}:CAR_{it}\neq0$
 
 ---
 class: inverse, center, middle
@@ -488,9 +507,9 @@ kable(nt,caption = "Table 2: The event study reuslts for the nonparametric tests
 
 ---
 
-
 # First COVID-19 incidence in Italy
-
+<br>
+<br>
 
 ```{r vizNOexter, echo=FALSE, message=FALSE, warning=FALSE}
 SplitD <- data.frame(name=colnames(rates),
@@ -570,8 +589,8 @@ gg1+gg2
 ---
 
 # Local lockdown announcement
-
-
+<br>
+<br>
 
 ```{r vizCROBEXexter, echo=FALSE, message=FALSE, warning=FALSE}
 
