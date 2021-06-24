@@ -152,7 +152,7 @@ name: dtamet
 <br>
 <br>
 
-```{r, echo=FALSE, fig.height=7}
+```{r, echo=FALSE, fig.height=10}
 knitr::include_url("https://zse.hr/en/indices/38")
 ```
 
@@ -630,7 +630,7 @@ plot(es3)
 1. The first COVID-19 incidence in Italy
 2. Local announcement of lockdown
 
-- How do you explain relative performance of tourist stocks? 
+>  How do you explain (good) relative performance of tourist stocks? 
 
 ---
 
