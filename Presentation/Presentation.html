@@ -7,6 +7,8 @@
     <link href="libs/remark-css/default.css" rel="stylesheet" />
     <link href="libs/remark-css/metropolis.css" rel="stylesheet" />
     <link href="libs/remark-css/metropolis-fonts.css" rel="stylesheet" />
+    <script src="libs/kePrint/kePrint.js"></script>
+    <link href="libs/lightable/lightable.css" rel="stylesheet" />
   </head>
   <body>
     <textarea id="source">
@@ -21,9 +23,7 @@ class: center, middle, inverse, title-slide
 
 
 
-
 &lt;style type="text/css"&gt;
-
 @media print {
   .has-continuation {
     display: block !important;
@@ -42,10 +42,11 @@ remark-slide-content {
 .mid. remark-code { /*Change made here*/
   font-size: 60% !important;
 }
-.tiny. remark-code { /*Change made here*/
+.tiny .remark-code { /*Change made here*/
   font-size: 40% !important;
 }
 &lt;/style&gt;
+
 
 
 
@@ -59,7 +60,9 @@ remark-slide-content {
 
 1. [COVID-19, economy and tourism](#econ)
 &lt;br&gt;
+&lt;br&gt;
 2. [Data and Event Study metodology](#dtamet)
+&lt;br&gt;
 &lt;br&gt;
 3. [Effect of COVID-19 on tourist stocks in Croatia](#effect)
 
@@ -84,7 +87,8 @@ name: econ
 &lt;br&gt;
 &lt;br&gt;
 
-- Huge research on COVID-19 economics (check: [1](https://cepr.org/content/covid-economics-vetted-and-real-time-papers-0),[2](https://voxeu.org/debates/economics-time-covid-19), [3](https://www.oxfordeconomics.com/coronavirus),
+- Huge research literature on COVID-19 economics (check: [1](https://cepr.org/content/covid-economics-vetted-and-real-time-papers-0),
+[2](https://voxeu.org/debates/economics-time-covid-19), [3](https://www.oxfordeconomics.com/coronavirus),
 [4](https://www.sciencedirect.com/science/article/pii/S0313592621000321),
 [5](https://www.brookings.edu/research/social-and-economic-impact-of-covid-19/),
 [6](https://www.iza.org/publications/dp/13411/a-literature-review-of-the-economics-of-covid-19))
@@ -167,9 +171,7 @@ name: dtamet
 
 # Tourist stocks in Croatia
 
-
-.tiny[
-&lt;table&gt;
+&lt;table class="table" style="font-size: 8px; margin-left: auto; margin-right: auto;"&gt;
  &lt;thead&gt;
   &lt;tr&gt;
    &lt;th style="text-align:right;"&gt; No. &lt;/th&gt;
@@ -295,11 +297,10 @@ name: dtamet
   &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
-]
 
 
 
-.[footnote [*]Check the [paper](https://www.researchgate.net/publication/309300600_Tourism_Sector_on_the_Zagreb_Stock_Exchange_ZSE_What_is_the_Value_of_Croatian_Tourism) on the valuation of Croatian tourist stocks.]
+.pull_right[ [*]Check the [paper](https://www.researchgate.net/publication/309300600_Tourism_Sector_on_the_Zagreb_Stock_Exchange_ZSE_What_is_the_Value_of_Croatian_Tourism) on the valuation of Croatian tourist stocks.]
 ---
 
 # Event study methodology
@@ -366,9 +367,10 @@ name: dtamet
 
 
 
+
 .tiny[
-&lt;table&gt;
-&lt;caption&gt;&lt;/caption&gt;
+&lt;table class="table" style="font-size: 10px; margin-left: auto; margin-right: auto;"&gt;
+&lt;caption style="font-size: initial !important;"&gt;&lt;/caption&gt;
  &lt;thead&gt;
   &lt;tr&gt;
    &lt;th style="text-align:left;"&gt; Pandemic &lt;/th&gt;
@@ -525,9 +527,9 @@ name: dtamet
 
 # Parametric tests
 
-.tiny[
-&lt;table&gt;
-&lt;caption&gt;&lt;/caption&gt;
+
+&lt;table class="table" style="font-size: 6px; margin-left: auto; margin-right: auto;"&gt;
+&lt;caption style="font-size: initial !important;"&gt;&lt;/caption&gt;
  &lt;thead&gt;
   &lt;tr&gt;
    &lt;th style="text-align:left;"&gt; Date &lt;/th&gt;
@@ -938,15 +940,15 @@ name: dtamet
   &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
-]
+
 
 ---
 
 # Non-parametric tests
 
-.tiny[
-&lt;table&gt;
-&lt;caption&gt;&lt;/caption&gt;
+
+&lt;table class="table" style="font-size: 6px; margin-left: auto; margin-right: auto;"&gt;
+&lt;caption style="font-size: initial !important;"&gt;&lt;/caption&gt;
  &lt;thead&gt;
   &lt;tr&gt;
    &lt;th style="text-align:left;"&gt; Date &lt;/th&gt;
@@ -1357,7 +1359,7 @@ name: dtamet
   &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
-]
+
 
 
 ---
@@ -1392,7 +1394,7 @@ name: dtamet
 &lt;br&gt;
 - Negative effect of COVID-19 on tourist sector
 
-- Similar market wide effects of COVDID-19 pandemic
+- Similar market wide (sectoral) effects of COVDID-19 pandemic
 
 - Important events are:
 1. The first COVID-19 incidence in Italy

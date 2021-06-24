@@ -13,7 +13,6 @@ output:
 subtitle: "Tourism in Southern and Eastern Europe, <br> 6th International Scientific Conference"
 ---
 
-
 ```{r setup, include=FALSE}
 options(htmltools.dir.version = FALSE)
 library(knitr)
@@ -26,7 +25,6 @@ opts_chunk$set(
 ```
 
 ```{css, echo = F, eval = T}
-
 @media print {
   .has-continuation {
     display: block !important;
@@ -45,10 +43,11 @@ remark-slide-content {
 .mid. remark-code { /*Change made here*/
   font-size: 60% !important;
 }
-.tiny. remark-code { /*Change made here*/
+.tiny .remark-code { /*Change made here*/
   font-size: 40% !important;
 }
 ```
+
 
 ```{r packgaes, warning=F, echo=F, message=F}
 
@@ -108,7 +107,8 @@ name: econ
 <br>
 <br>
 
-- Huge research on COVID-19 economics (check: [1](https://cepr.org/content/covid-economics-vetted-and-real-time-papers-0),[2](https://voxeu.org/debates/economics-time-covid-19), [3](https://www.oxfordeconomics.com/coronavirus),
+- Huge research literature on COVID-19 economics (check: [1](https://cepr.org/content/covid-economics-vetted-and-real-time-papers-0),
+[2](https://voxeu.org/debates/economics-time-covid-19), [3](https://www.oxfordeconomics.com/coronavirus),
 [4](https://www.sciencedirect.com/science/article/pii/S0313592621000321),
 [5](https://www.brookings.edu/research/social-and-economic-impact-of-covid-19/),
 [6](https://www.iza.org/publications/dp/13411/a-literature-review-of-the-economics-of-covid-19))
@@ -203,8 +203,6 @@ knitr::include_url("https://zse.hr/en/indeks-366/365?isin=HRZB00ICBTU0")
 
 # Tourist stocks in Croatia
 
-
-.tiny[
 ```{r, echo=FALSE}
 kable(tribble(
  ~No.,  ~Ticker, ~Name,
@@ -231,13 +229,13 @@ kable(tribble(
 21,"SUKC",		"SUNCE HOTELI d.d.",
 22,"TUHO",		"TURISTHOTEL d.d.",
 23,"VIS",		"VIS, d.d."
-))
+)) %>%
+  kable_styling(font_size = 8)
 ```
-]
 
 
 
-.[footnote [*]Check the [paper](https://www.researchgate.net/publication/309300600_Tourism_Sector_on_the_Zagreb_Stock_Exchange_ZSE_What_is_the_Value_of_Croatian_Tourism) on the valuation of Croatian tourist stocks.]
+.pull_right[ [*]Check the [paper](https://www.researchgate.net/publication/309300600_Tourism_Sector_on_the_Zagreb_Stock_Exchange_ZSE_What_is_the_Value_of_Croatian_Tourism) on the valuation of Croatian tourist stocks.]
 ---
 
 # Event study methodology
@@ -416,6 +414,7 @@ add_indx <- get_rates_from_prices(gold,
 
 colnames(add_indx) <- "gold"
 ```
+
 .tiny[
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
  market %>%
@@ -433,7 +432,8 @@ colnames(add_indx) <- "gold"
             Stdev = sd(Return),
             Min = min(Return),
             Max = max(Return)) %>% 
-  mutate_if(is.numeric, round, 3) %>% kable(caption = "")
+  mutate_if(is.numeric, round, 3) %>% kable(caption = "") %>%
+  kable_styling(font_size = 10)
 
 ```
 ]
@@ -443,7 +443,7 @@ colnames(add_indx) <- "gold"
 
 # Parametric tests
 
-.tiny[
+
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 securities_returns <- apply_market_model(
   rates = rates,
@@ -462,17 +462,18 @@ pt <- parametric_tests(list_of_returns = securities_returns,
 options(digits = 3)
 pt <- pt[,c(-2,-3,-4)]
 colnames(pt) <- c("Date", "BW80","sig","BW85","sig","t-stat","sig","pt","sig","BH","sig","LMB","sig")
-kable(pt,caption = "")
+kable(pt,caption = "") %>%
+  kable_styling(font_size = 6)
 
 
 ```
-]
+
 
 ---
 
 # Non-parametric tests
 
-.tiny[
+
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 nt <- nonparametric_tests(list_of_returns = securities_returns,
                     event_start = as.Date("2020-02-16"),
@@ -481,9 +482,10 @@ nt <- nonparametric_tests(list_of_returns = securities_returns,
 options(digits = 3)
 nt <- nt[,c(-2,-3)]
 colnames(nt) <- c("Date", "SIGN","sig","GSIGN","sig","CSIGN","sig","RANK","sig","MRANK","sig","WLCX","sig")
-kable(nt,caption = "")
+kable(nt,caption = "") %>%
+  kable_styling(font_size = 6)
 ```
-]
+
 
 
 ---
@@ -665,7 +667,7 @@ plot(es3)
 <br>
 - Negative effect of COVID-19 on tourist sector
 
-- Similar market wide effects of COVDID-19 pandemic
+- Similar market wide (sectoral) effects of COVDID-19 pandemic
 
 - Important events are:
 1. The first COVID-19 incidence in Italy
