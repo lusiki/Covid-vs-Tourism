@@ -258,7 +258,7 @@ $AR_{it} = R_{it}-(\alpha_{it}+\beta_{it}R_{MKT_{it}})$
 
 where $\alpha_{it}$ and $\beta_{it}$ represent estimated parameters from the ordinary least squares model.
 
-Systematialy deviations of $AR_{it}$ from 0 implies that the market mispricing of the event and offers a profitable arbitrage strategy. The cumulative abnormal return $CAR$ is computed by aggregating abnormal returns:
+Systematic deviations of $AR_{it}$ from 0 implies that the market mispricing of the event and offers a profitable arbitrage strategy. The cumulative abnormal return $CAR$ is computed by aggregating abnormal returns:
 
 $CAR_{(t1,t2)}=\sum_{t=t_{1}}^{t_{2}}AR_{t}$.
 
