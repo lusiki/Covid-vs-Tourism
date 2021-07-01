@@ -76,7 +76,7 @@ library(patchwork)
 <br>
 <br>
 <br>
-
+<br>
 
 1. [COVID-19, economy and tourism](#econ)
 <br>
@@ -106,6 +106,7 @@ name: econ
 # Macroeconomic effects of COVID-19
 <br>
 <br>
+<br>
 
 - Huge research literature on COVID-19 economics (check: [1](https://cepr.org/content/covid-economics-vetted-and-real-time-papers-0),
 [2](https://voxeu.org/debates/economics-time-covid-19), [3](https://www.oxfordeconomics.com/coronavirus),
@@ -114,13 +115,15 @@ name: econ
 [6](https://www.iza.org/publications/dp/13411/a-literature-review-of-the-economics-of-covid-19))
 <br>
 <br>
+<br>
 - Sectoral effects (check: [1](https://www.ilo.org/global/topics/coronavirus/sectoral/lang--en/index.htm),
 [2](https://www.consilium.europa.eu/media/48767/eg-note-sectoral-impact_fin.pdf),
 [3][1])
 [1]:https://www.europarl.europa.eu/RegData/etudes/STUD/2021/662903/IPOL_STU(2021)662903_EN.pdf
 <br>
 <br>
-- Impact of COVID-19 pandemic on SEE (check: [1](https://wiiw.ac.at/brave-new-world-the-economic-and-political-challenges-facing-eastern-europe-after-covid-19-e-517.html),
+<br>
+- Impact of COVID-19 pandemic on CESEE (check: [1](https://wiiw.ac.at/brave-new-world-the-economic-and-political-challenges-facing-eastern-europe-after-covid-19-e-517.html),
 [2](https://wiiw.ac.at/in-it-together-the-economic-recovery-from-covid-19-in-central-europe-n-483.html),
 [3](https://wiiw.ac.at/contours-of-a-post-covid-economy-n-445.html))
 
@@ -129,10 +132,15 @@ name: econ
 # COVID-19 and tourism
 <br>
 <br>
+<br>
 
 - [Jobs, exports, GDP, social consequences](https://www.unwto.org/tourism-and-covid-19-unprecedented-economic-impacts)
 <br>
+<br>
+<br>
 - [Multiplicative effects of tourism, for the economy and other sectors](https://www.sciencedirect.com/science/article/pii/S2666518221000206)
+<br>
+<br>
 <br>
 - Financial effects
 
